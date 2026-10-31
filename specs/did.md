@@ -12,7 +12,7 @@ An example DID is `did:zu:ewvi7nxzyoun6zhxrhs64oiz`.
 
 Currently, Zu accepts two DID methods:
 
-- `did:zu`: the `did:plc` method (v0.3.0) under its own name and its own directory, `https://plc.zuzalu.ink`. See the [`did:zu` method specification](https://github.com/4seas-community/did-method-zu/blob/main/website/spec/v0.1/did-zu.md). Its operation formats, signing rules and limits are those of `did:plc`, unchanged.
+- `did:zu`: the `did:plc` method (v0.3.0) under its own name and its own directory, `https://plc.zuzalu.ink`. See the [`did:zu` method specification](did-zu.md). Its operation formats, signing rules and limits are those of `did:plc`, unchanged.
 - `did:web`: a [W3C community draft](https://w3c-ccg.github.io/did-method-web/) based on HTTPS (and DNS). The identifier section is a hostname. This method is accepted to provide an independent alternative to `did:zu`, the same way atproto accepts it beside `did:plc`. See usage details below.
 
 It is possible that other methods will be accepted in the future, but the intention is to keep the accepted set as small as possible. It is certainly not the intention to support all or even a significant fraction of all DID methods.
