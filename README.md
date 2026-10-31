@@ -9,8 +9,9 @@ Zu is the protocol behind polis, written down as specifications that other softw
 | Module | Covers | Where |
 |---|---|---|
 | did | The DID method `did:zu` | [4seas-community/did-method-zu](https://github.com/4seas-community/did-method-zu); specification [`website/spec/v0.1/did-zu.md`](https://github.com/4seas-community/did-method-zu/blob/main/website/spec/v0.1/did-zu.md); directory `https://plc.zuzalu.ink` |
+| map | Handles such as `alice.4seas.example`, checked by the directory and looked up in its map | [`specs/map.md`](specs/map.md) (draft) |
 
-This is the only module so far. The other modules of v0.3 have not been designed yet.
+The other modules of v0.3 have not been designed yet.
 
 ## Layout
 
