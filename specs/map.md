@@ -1,10 +1,10 @@
 # Map
 
-A specification for human-friendly handles of `did:zu` identities, and for the map that links each handle to its DID.
+A specification for human-friendly handles of Zu identities, and for the map that links each handle to its DID.
 
 This document is adapted, with changes, from the [AT Protocol Handle specification](https://atproto.com/specs/handle) (bluesky-social/atproto-website, commit `b0090eb`); its section Claiming a Handle is adapted from the [AT Protocol DID specification](https://atproto.com/specs/did) in the same repository. Both are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
 
-`did:zu` DIDs are the long-term persistent identifiers for people and for cities in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
+DIDs (`did:zu` or `did:web`, see [DIDs](did.md)) are the long-term persistent identifiers for people and for cities in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
 
 In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each result in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map and does not check domains itself.
 
@@ -110,9 +110,9 @@ A DID claims handles in the `alsoKnownAs` array of its DID document. Each elemen
 
 A person may hold handles from several cities. Every syntactically valid `zu://` entry is a claimed handle, and the first one is the primary handle, shown by default. URIs with other prefixes, such as atproto's `at://`, are not handles in Zu and are ignored by this specification.
 
-The `did:zu` directory accepts at most 10 `alsoKnownAs` entries per DID, each at most 258 characters: 253 for the hostname and 5 for the prefix. `zu://` has the same length as `at://`, so the per-entry limit is unchanged.
+For `did:zu`, the directory accepts at most 10 `alsoKnownAs` entries per DID, each at most 258 characters: 253 for the hostname and 5 for the prefix. `zu://` has the same length as `at://`, so the per-entry limit is unchanged.
 
-A claim is the DID owner's own statement, signed with one of its rotation keys as part of a `did:zu` operation. It does not by itself prove that the handle belongs to the DID.
+A claim is the DID owner's own statement. For `did:zu` it is signed with one of the DID's rotation keys as part of an operation; for `did:web` it is whatever the document served by the domain says. It does not by itself prove that the handle belongs to the DID.
 
 ## Domain Confirmation
 
@@ -161,8 +161,11 @@ The directory checks a handle in both directions: the DID document claims it (se
 
 The directory checks a handle:
 
-- as soon as it accepts an operation that adds the handle to a DID's `alsoKnownAs`; and
+- as soon as it accepts a `did:zu` operation that adds the handle to a DID's `alsoKnownAs`;
+- the first time the handle is looked up and is not yet in the map; and
 - again when its previous result expires, so that every handle in the map is re-checked periodically.
+
+The directory keeps the `did:zu` operation log itself. A `did:web` document is not hosted by the directory, so it is fetched from the domain over HTTPS at each check.
 
 For each check, the directory records the handle, the DID, whether the check passed, and the time of the check. These records form the map.
 
