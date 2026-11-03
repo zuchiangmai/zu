@@ -39,6 +39,8 @@ The list is for the bodies of records: a type that needs a word for one of these
 
 Fields defined by another standard keep the names that standard gives them, even when those names are in camel case. Examples are `alsoKnownAs`, `verificationMethod` and `publicKeyMultibase` in DID documents.
 
+Names beginning with `$` are reserved for the data model and the protocol (see [Data Model](specs/data-model.md)).
+
 ## Versions
 
 The protocol as a whole has one version, stated in the [README](README.md); it is now v0.3. As in atproto, a single specification has no version number of its own: it is edited in place, and its git history is its record. A changelog is not kept separately. A data format that may change incompatibly carries its own version inside the data, the way atproto's repository format states "version 3" and its event stream "v0". A change that is expected but not yet made is listed under Possible Future Changes first.
