@@ -4,7 +4,7 @@ A specification for the DID methods Zu accepts, and for what Zu reads from a DID
 
 This document is adapted, with changes, from the [AT Protocol DID specification](https://atproto.com/specs/did) (bluesky-social/atproto-website, commit `f68a700`), which is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
 
-Zu uses [Decentralized Identifiers](https://en.wikipedia.org/wiki/Decentralized_identifier) (DIDs) as persistent identifiers for people and for cities. The core DID standard was developed by the W3C, and describes a framework for compliant identifier systems ("DID methods"), of which several exist. To ensure broad interoperation, Zu only accepts a small number of DID methods.
+Zu uses [Decentralized Identifiers](https://en.wikipedia.org/wiki/Decentralized_identifier) (DIDs) as persistent identifiers for people, for cities, and for hosts, the servers that run cities. The core DID standard was developed by the W3C, and describes a framework for compliant identifier systems ("DID methods"), of which several exist. To ensure broad interoperation, Zu only accepts a small number of DID methods.
 
 An example DID is `did:zu:ewvi7nxzyoun6zhxrhs64oiz`.
 
@@ -111,6 +111,8 @@ A valid signing key is required for most Zu functionality. A DID with no valid k
 
 Zu does not yet define `service` entries for people. How the DID document of a city is marked is specified in a separate document.
 
+A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed through the map. For example, a host may claim `zu://pol.4seas.example`.
+
 Other features may make use of further `verificationMethod` keys and `service` entries.
 
 When parsing the `id` field in object elements of the `service` and `verificationMethod` arrays, implementations should support both relative fragment syntax (eg, `"id": "#zu"`) and fully-qualified syntax (eg, `"id": "did:web:example.com#zu"`).
@@ -168,4 +170,5 @@ Questions still open in this draft:
 - Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
 - Which `service` entries people's DID documents carry.
 - How a city's DID document is marked, to be specified in a separate document.
+- How a host's DID document is marked.
 - Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.
