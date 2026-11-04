@@ -6,7 +6,7 @@ This document is adapted, with changes, from the [AT Protocol Handle specificati
 
 DIDs (`did:zu` or `did:web`, see [DIDs](did.md)) are the long-term persistent identifiers for people and for cities in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
 
-In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each result in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map and does not check domains itself.
+In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each confirmed handle in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map. The directory does not record that a handle has become invalid; each device records that for itself (see Invalid Handles).
 
 Lookups go to the directory because keys stay with the people who own them. No hosting server holds a person's keys or always answers for them, the way an atproto PDS does, so the directory is the place every city can ask.
 
@@ -167,26 +167,26 @@ The directory checks a handle:
 
 The directory keeps the `did:zu` operation log itself. A `did:web` document is not hosted by the directory, so it is fetched from the domain over HTTPS at each check.
 
-For each check, the directory records the handle, the DID, whether the check passed, and the time of the check. These records form the map.
+When a check passes, the directory records the handle, the DID and the time of the check. These records form the map. A check that fails is not recorded.
 
 The directory follows these practices when checking:
 
-- It is ok to attempt both methods in parallel, and to use the first successful result available. If the two methods return conflicting results (aka, different DIDs), the DNS TXT result should be preferred, though it is also acceptable to record the result as ambiguous and check again later.
+- It is ok to attempt both methods in parallel, and to use the first successful result available. If the two methods return conflicting results (aka, different DIDs), the DNS TXT result should be preferred, though it is also acceptable to record neither and check again later.
 - DNS TTL values provide a possible cache lifetime, but are probably too aggressive (aka, too short a lifetime) for handles.
 - Use of a recursive DNS resolver can help with propagation delays, which are important when a DID adds a handle and waits for confirmation.
 - Checks should be made from a relatively trusted network environment and configuration. Running them from multiple regions and environments can help mitigate (though not fully resolve) concerns about traffic manipulation or intentionally segmented responses.
 
 ## Handle Lookup
 
-Software that needs the DID for a handle asks the directory and uses the map's answer. The answer gives the DID, whether the handle is currently valid, and the time of the last check. Software should not check the domain itself in place of the map.
+Software that needs the DID for a handle asks the directory and uses the map's answer. The answer gives the DID and the time of the check that confirmed it.
 
-Software that starts from a DID reads the claimed handles from its DID document, and shows a handle only if the map currently records it as valid for that DID.
+Software that starts from a DID reads the claimed handles from its DID document.
 
 The lookup endpoint and its response format are not yet specified.
 
 ## Invalid Handles
 
-If a check finds that a handle no longer confirms the DID that claims it, the handle is marked as invalid in the map. In responses, the special handle value `handle.invalid` can be used to indicate that there is no bi-directionally valid handle for a given DID. This handle can not be used in most situations (search queries, requests, etc).
+The DID document does not say which of its handles are invalid, and the directory does not record it. Each device records for itself that a handle no longer confirms the DID that claims it. Software can show the special handle value `handle.invalid` when none of a DID's handles works. This handle can not be used in most situations (search queries, requests, etc).
 
 A DID with an invalid handle is still a valid DID: its operation log, keys and data are unaffected. Software should keep displaying its content (to prevent breakage), either without a handle or with a clear indication that the handle is invalid. The DID owner can claim another handle at any time.
 
@@ -214,7 +214,7 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 The directory is trusted for lookups. It could answer with the wrong DID, or give different answers to different askers. A current answer can be checked against the DID document's claim and against the domain, but nothing in this draft lets anyone check the map's past records after the fact. How the map is witnessed is an open question.
 
-Authority over a domain is authority to confirm handles under it. If a city's domain expires or changes hands, the new holder can confirm handles under it for other DIDs. Periodic checks then mark the earlier handles invalid; the DIDs that claimed them, and their data, are not affected.
+Authority over a domain is authority to confirm handles under it. If a city's domain expires or changes hands, the new holder can confirm handles under it for other DIDs. The earlier handles under it then stop confirming the DIDs that claimed them; those DIDs, and their data, are not affected.
 
 Handles which look similar to a well-known domain present security and impersonation challenges. For example, handles like `paypa1.com` or `paypal.cc` being confused for `paypal.com`. Very long handles can result in similar issues when truncated at the start or end (`paypal.com…`).
 
@@ -230,7 +230,7 @@ Questions still open in this draft:
 
 - How long a result is cached, and how often the directory re-checks.
 - Whether a domain that is temporarily unreachable counts as a failed check.
-- How invalid handles are marked in the map, and how long past results are kept.
+- How long past results are kept, and what happens to a handle's earlier result when a re-check fails.
 - Whether a domain's confirmation should be signed with the city's `did:zu` key, so that a past result can be checked again after the city is gone, as in DIF's [Well-Known DID Configuration](https://identity.foundation/well-known-did-configuration/resources/did-configuration).
 - Who witnesses the map's records, and whether several witnesses are required.
 - Whether 10 `alsoKnownAs` entries, and so at most 10 handles per DID, is enough.
