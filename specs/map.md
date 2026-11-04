@@ -4,13 +4,13 @@ A specification for human-friendly handles of Zu identities, and for the map tha
 
 This document is adapted, with changes, from the [AT Protocol Handle specification](https://atproto.com/specs/handle) (bluesky-social/atproto-website, commit `b0090eb`); its section Claiming a Handle is adapted from the [AT Protocol DID specification](https://atproto.com/specs/did) in the same repository. Both are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
 
-DIDs (`did:zu` or `did:web`, see [DIDs](did.md)) are the long-term persistent identifiers for people and for cities in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
+DIDs (`did:zu` or `did:web`, see [DIDs](did.md)) are the long-term persistent identifiers for people, cities and hosts in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
 
-In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each confirmed handle in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map. The directory does not record that a handle has become invalid; each device records that for itself (see Invalid Handles).
+In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each confirmed handle in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map. Once a handle is in the map, the directory does not check it again, and does not check whether its domain is still there. The directory does not record that a handle has become invalid; each device records that for itself (see Invalid Handles).
 
 Lookups go to the directory because keys stay with the people who own them. No hosting server holds a person's keys or always answers for them, the way an atproto PDS does, so the directory is the place every city can ask.
 
-This document covers handle syntax, how a DID claims a handle, how a domain confirms one, how the directory checks and records them, and how software looks them up. Cities, and how a city's DID is marked, are left to other documents.
+This document covers handle syntax, how a DID claims a handle, how a domain confirms one, how the directory checks and records them, and how software looks them up. Cities and hosts, and how their DIDs are marked, are left to other documents.
 
 ## Handle Identifier Syntax
 
@@ -108,7 +108,7 @@ A DID claims handles in the `alsoKnownAs` array of its DID document. Each elemen
 "alsoKnownAs": ["zu://alice.4seas.example", "zu://alice.zuzalu.example"]
 ```
 
-A person may hold handles from several cities. Every syntactically valid `zu://` entry is a claimed handle, and the first one is the primary handle, shown by default. URIs with other prefixes, such as atproto's `at://`, are not handles in Zu and are ignored by this specification.
+A person may hold handles from several cities, and a host claims its domain names as its handles. Every syntactically valid `zu://` entry is a claimed handle, and the first one is the primary handle, shown by default. URIs with other prefixes, such as atproto's `at://`, are not handles in Zu and are ignored by this specification.
 
 For `did:zu`, the directory accepts at most 10 `alsoKnownAs` entries per DID, each at most 258 characters: 253 for the hostname and 5 for the prefix. `zu://` has the same length as `at://`, so the per-entry limit is unchanged.
 
@@ -161,9 +161,10 @@ The directory checks a handle in both directions: the DID document claims it (se
 
 The directory checks a handle:
 
-- as soon as it accepts a `did:zu` operation that adds the handle to a DID's `alsoKnownAs`;
-- the first time the handle is looked up and is not yet in the map; and
-- again when its previous result expires, so that every handle in the map is re-checked periodically.
+- as soon as it accepts a `did:zu` operation that adds the handle to a DID's `alsoKnownAs`; and
+- the first time the handle is looked up and is not yet in the map.
+
+It does not check a handle again once the handle is in the map.
 
 The directory keeps the `did:zu` operation log itself. A `did:web` document is not hosted by the directory, so it is fetched from the domain over HTTPS at each check.
 
@@ -172,7 +173,6 @@ When a check passes, the directory records the handle, the DID and the time of t
 The directory follows these practices when checking:
 
 - It is ok to attempt both methods in parallel, and to use the first successful result available. If the two methods return conflicting results (aka, different DIDs), the DNS TXT result should be preferred, though it is also acceptable to record neither and check again later.
-- DNS TTL values provide a possible cache lifetime, but are probably too aggressive (aka, too short a lifetime) for handles.
 - Use of a recursive DNS resolver can help with propagation delays, which are important when a DID adds a handle and waits for confirmation.
 - Checks should be made from a relatively trusted network environment and configuration. Running them from multiple regions and environments can help mitigate (though not fully resolve) concerns about traffic manipulation or intentionally segmented responses.
 
@@ -228,9 +228,7 @@ It is conceivable that `.onion` handles would be allowed at some point in the fu
 
 Questions still open in this draft:
 
-- How long a result is cached, and how often the directory re-checks.
-- Whether a domain that is temporarily unreachable counts as a failed check.
-- How long past results are kept, and what happens to a handle's earlier result when a re-check fails.
+- How long past results are kept.
 - Whether a domain's confirmation should be signed with the city's `did:zu` key, so that a past result can be checked again after the city is gone, as in DIF's [Well-Known DID Configuration](https://identity.foundation/well-known-did-configuration/resources/did-configuration).
 - Who witnesses the map's records, and whether several witnesses are required.
 - Whether 10 `alsoKnownAs` entries, and so at most 10 handles per DID, is enough.
