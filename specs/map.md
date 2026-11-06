@@ -102,7 +102,7 @@ blah.arpa
 
 ## Claiming a Handle
 
-A DID claims handles in the `alsoKnownAs` array of its DID document. Each element of this array is a URI string. Handles have the URI prefix `zu://`, followed by the handle hostname, with no other URI parts or trailing characters:
+A DID claims handles in the `alsoKnownAs` array of its DID document. Each element of this array is a URI string. Handles have the URI prefix `zu://`, followed by the handle hostname, with no other URI parts or trailing characters; this is a `zu://` URI with no path (see [Paths](path.md)):
 
 ```json
 "alsoKnownAs": ["zu://alice.4seas.example", "zu://alice.zuzalu.example"]

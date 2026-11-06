@@ -1,0 +1,28 @@
+# Changelog
+
+What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name.
+
+## v0.3.1 (2026-11-06)
+
+Added:
+
+- [NSIDs](specs/nsid.md): record types are named by a reversed domain followed by a name, such as `com.example.note`, following atproto's NSIDs. Whoever controls the domain names the types under it.
+- [Paths](specs/path.md): every record is addressed by individual > type > key. The individual is a DID, and people, cities and hosts are all individuals. A path is written as a `zu://` URI, such as `zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self`. The key syntax follows atproto's record keys.
+- [Retrieval](specs/retrieval.md): content is fetched by its CID with DASL RASL, from `https://<host>/.well-known/rasl/<cid>`, and must be checked against the CID before it is used. A host serves this way only content it would give to anyone.
+
+Changed:
+
+- [Data Model](specs/data-model.md): record types are named by NSIDs, so the open question is now only whether a record also states its type inside its own data. Links point to Retrieval for how content is fetched.
+- [Map](specs/map.md): the `zu://` handle in `alsoKnownAs` is described as a `zu://` URI with no path.
+- [CONVENTIONS](CONVENTIONS.md): the protocol version is written as `major.minor.patch`, marked by a git tag, and its changes are listed in this file.
+
+Still open, carried over from v0.3.0 and listed under Possible Future Changes in each specification: which kinds of keys a type uses, which record a key refers to when it has been written more than once, how an individual's records are grouped and signed, and how software finds from a DID the host that stores the individual's records.
+
+## v0.3.0 (2026-11-04)
+
+The first set of v0.3 specifications, a breaking redesign of v0.2:
+
+- [DIDs](specs/did.md): Zu accepts `did:zu` and `did:web`. The signing key is an Ed25519 key named `#zu`. People, cities and hosts each have a DID; a host keeps its DID when its domain names change.
+- [`did:zu`](specs/did-zu.md): the `did:plc` method under its own name, with its directory at `https://plc.zuzalu.ink`.
+- [Map](specs/map.md): handles are claimed as `zu://` entries in `alsoKnownAs`, the first being the primary handle, and confirmed by their domain through a `_zu` DNS TXT record or `/.well-known/zu-did`. The directory checks a handle once and records only confirmed handles; each device records for itself which handles no longer work.
+- [Data Model](specs/data-model.md): data is encoded in DRISL, linked by DASL CIDs, and refers to files by blob references.
