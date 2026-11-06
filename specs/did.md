@@ -33,7 +33,7 @@ The [DID Web method](https://w3c-ccg.github.io/did-method-web/) is inherently ti
 
 In the context of Zu, only hostname-level `did:web` DIDs are supported: path-based DIDs are not supported. The same restrictions on top-level domains that apply to handles (see [Map](map.md)) also apply to `did:web` domains. The special `localhost` hostname is allowed, but only in testing and development environments. Port numbers (with separating colon hex-encoded) are only allowed for `localhost`, and only in testing and development.
 
-The directory does not host `did:web` documents. When it needs one, for example to check a handle, it fetches the document from the domain over HTTPS.
+The directory does not host `did:web` documents. Software fetches them from the domain over HTTPS.
 
 ## DID Identifier Syntax
 
@@ -101,7 +101,7 @@ The DID declared in the document (in the `id` field) should always be verified a
 
 The **handles** claimed by the DID are found in the `alsoKnownAs` array. Each element of this array is a URI string. Handles have the URI prefix `zu://`, followed by the handle hostname, with no other URI parts or trailing characters. Every syntactically valid `zu://` entry is a claimed handle, and the first one is the primary handle. Other URIs, such as atproto's `at://`, should be ignored.
 
-A claimed handle is only valid once the directory has confirmed it bidirectionally and recorded it in the map. See [Map](map.md) for details.
+A claimed handle is only valid once the software using it has confirmed it bidirectionally. See [Map](map.md) for details.
 
 The DID is the primary identifier in Zu, and a DID whose document does not contain a valid and confirmed handle can still participate. Software should be careful to either not display any handle for such a DID, or obviously indicate that any handle associated with it is invalid.
 
@@ -111,7 +111,7 @@ A valid signing key is required for most Zu functionality. A DID with no valid k
 
 Zu does not yet define `service` entries for people. How the DID document of a city is marked is specified in a separate document.
 
-A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed through the map. For example, a host may claim `zu://pol.4seas.example`.
+A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed in the same way (see [Map](map.md)). For example, a host may claim `zu://pol.4seas.example`.
 
 Other features may make use of further `verificationMethod` keys and `service` entries.
 

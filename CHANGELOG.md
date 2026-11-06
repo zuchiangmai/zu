@@ -8,6 +8,7 @@ Changed:
 
 - [README](README.md): a Scope section states that v0.3 specifies the relationship between one city and the data of its people. Data exchanged between cities is being designed; peer-to-peer connections between people of different cities are left to be designed later.
 - [DIDs](specs/did.md) and [Retrieval](specs/retrieval.md): their open questions and possible future changes leave room for an iroh relay run by a host, as a `service` entry and as a way to fetch content besides HTTPS.
+- [Map](specs/map.md) and [DIDs](specs/did.md): the directory stores DID documents, with the handles written in them, but no longer checks those handles, and keeps no record of confirmed handles. As in atproto, software resolves each handle through DNS or HTTPS and checks it in both directions itself; caching results and re-resolving them periodically is recommended. Whether hosts look up handles is a new open question; the questions on how long past results are kept, who witnesses the map's records, and the lookup endpoint are dropped.
 
 ## v0.3.1 (2026-11-06)
 
