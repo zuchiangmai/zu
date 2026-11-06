@@ -105,9 +105,11 @@ A claimed handle is only valid once the software using it has confirmed it bidir
 
 The DID is the primary identifier in Zu, and a DID whose document does not contain a valid and confirmed handle can still participate. Software should be careful to either not display any handle for such a DID, or obviously indicate that any handle associated with it is invalid.
 
-The public **Zu signing key** for the DID is found under the `verificationMethod` array, in an object with `id` ending `#zu`, the `controller` matching the DID itself, and `type` matching the fixed string `Multikey`. The key is an `ed25519` key. The first valid Zu signing key in the array should be used, and any others ignored. The `publicKeyMultibase` field will be the public key in multibase encoding. A DID uses the same signing key in every city.
+The public **Zu signing keys** for the DID are found under the `verificationMethod` array, in objects whose `id` fragment is exactly `zu`, or `zu-` followed by eight characters from `a-z2-7`, with the `controller` matching the DID itself and `type` matching the fixed string `Multikey`. Each key is an `ed25519` key, and the `publicKeyMultibase` field will be the public key in multibase encoding. Fragments are compared as whole strings, so an `id` such as `#a#zu` is not a Zu signing key.
 
-A valid signing key is required for most Zu functionality. A DID with no valid key in its document is likely broken.
+A DID may have several Zu signing keys, for example one for each device and web origin that holds a private key. Every valid Zu signing key stands for the DID: none takes priority, and anything signed with one of them is signed by the DID. Software should derive the eight characters after `zu-` from the key itself, as the first eight characters of the unpadded lowercase base32 encoding (RFC 4648) of the SHA-256 hash of the raw public key, so that a fragment is never reused for a different key and says nothing about the device or city that holds it.
+
+At least one valid Zu signing key is required for most Zu functionality. A DID with no valid key in its document is likely broken.
 
 Zu does not yet define `service` entries for people. How the DID document of a city is marked is specified in a separate document.
 
@@ -121,22 +123,30 @@ When parsing the `id` field in object elements of the `service` and `verificatio
 
 Public keys in DID documents under `verificationMethod`, including Zu signing keys, are represented as an object with the following fields:
 
-- `id` (string, required): the DID followed by an identifying fragment. Use `#zu` as the fragment for Zu signing keys
+- `id` (string, required): the DID followed by an identifying fragment. Use `#zu`, or `#zu-` followed by eight characters from `a-z2-7`, as the fragment for Zu signing keys
 - `type` (string, required): the fixed string `Multikey`
 - `controller` (string, required): DID controlling the key, which in the current version of Zu must match the DID itself
 - `publicKeyMultibase` (string, required): the public key itself, encoded in "multikey" format
 
 The `publicKeyMultibase` format for `Multikey` is the same encoding scheme as used with `did:key`, but without the `did:key:` prefix: the multicodec for the key type (`ed25519-pub` for Ed25519) followed by the key bytes, encoded with `base58btc` and prefixed with `z`. Ed25519 keys in this encoding begin with `z6Mk`.
 
-For example, a Zu signing key in a `did:zu` document:
+For example, two Zu signing keys in a `did:zu` document:
 
 ```json
-{
-  "id": "did:zu:ewvi7nxzyoun6zhxrhs64oiz#zu",
-  "type": "Multikey",
-  "controller": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
-  "publicKeyMultibase": "z6Mk…"
-}
+[
+  {
+    "id": "did:zu:ewvi7nxzyoun6zhxrhs64oiz#zu",
+    "type": "Multikey",
+    "controller": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
+    "publicKeyMultibase": "z6Mk…"
+  },
+  {
+    "id": "did:zu:ewvi7nxzyoun6zhxrhs64oiz#zu-7xq2k4mf",
+    "type": "Multikey",
+    "controller": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
+    "publicKeyMultibase": "z6Mk…"
+  }
+]
 ```
 
 Zu does not yet have a cryptography specification of its own.
@@ -159,6 +169,8 @@ For `did:web`, whoever controls the domain controls the DID. If the domain is lo
 
 DID documents are public, and so are the handles and keys they list. The directory can see which DIDs are resolved, and by whom.
 
+Each Zu signing key can sign for the DID until a rotation key removes it from the document. Every key added or removed is public, and for `did:zu` stays in the audit log, so a DID with one key for each device or web origin reveals how many keys it has and when they changed.
+
 ## Possible Future Changes
 
 The hard maximum DID length limit may be reduced, at the protocol syntax level. We are not aware of any DID methods that we would consider supporting which have identifiers longer than, say, 256 characters.
@@ -172,3 +184,5 @@ Questions still open in this draft:
 - How a city's DID document is marked, to be specified in a separate document.
 - How a host's DID document is marked.
 - Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.
+- How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
+- Whether 10 `verificationMethods` entries, and so at most 10 Zu signing keys per DID, is enough when each device and web origin holds its own key.
