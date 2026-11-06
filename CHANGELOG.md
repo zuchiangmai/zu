@@ -1,6 +1,13 @@
 # Changelog
 
-What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name.
+What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
+
+## Unreleased
+
+Changed:
+
+- [README](README.md): a Scope section states that v0.3 specifies the relationship between one city and the data of its people. Data exchanged between cities is being designed; peer-to-peer connections between people of different cities are left to be designed later.
+- [DIDs](specs/did.md) and [Retrieval](specs/retrieval.md): their open questions and possible future changes leave room for an iroh relay run by a host, as a `service` entry and as a way to fetch content besides HTTPS.
 
 ## v0.3.1 (2026-11-06)
 

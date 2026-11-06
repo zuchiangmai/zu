@@ -75,6 +75,8 @@ A host sees which CIDs are requested, and from which network addresses. A hint i
 
 RASL may come to use paths in its URLs; Zu software should ignore them until then, as RASL requires.
 
+Content may also be fetched over peer-to-peer connections between devices, for example through an [iroh](https://www.iroh.computer) relay run by a host, besides HTTPS. Such connections are not specified yet (see the [README](../README.md)); the check in Checking Content applies to content however it is fetched.
+
 Hash types that allow large blobs to be checked while they stream, such as BLAKE3 in [BDASL](https://dasl.ing/bdasl.html), may be added (see [Data Model](data-model.md)).
 
 Questions still open in this draft:
