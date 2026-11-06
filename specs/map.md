@@ -1,16 +1,14 @@
 # Map
 
-A specification for human-friendly handles of Zu identities, and for the map that links each handle to its DID.
+A specification for human-friendly handles of Zu identities, and for how software links each handle to its DID.
 
 This document is adapted, with changes, from the [AT Protocol Handle specification](https://atproto.com/specs/handle) (bluesky-social/atproto-website, commit `b0090eb`); its section Claiming a Handle is adapted from the [AT Protocol DID specification](https://atproto.com/specs/did) in the same repository. Both are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
 
 DIDs (`did:zu` or `did:web`, see [DIDs](did.md)) are the long-term persistent identifiers for people, cities and hosts in Zu, but they are opaque and unfriendly for human use. **Handles** are mutable and human-friendly names, in the form of a DNS hostname. For example, `alice.4seas.example`. Handles must be bi-directionally linked to a DID: the DID document must claim the handle, and the handle's domain must confirm the DID.
 
-In atproto, every service checks this link for itself. In Zu, the check is made by the **directory**, the public server that also keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`). The directory records each confirmed handle in the **map**, and the map is the authority on which DID a handle belongs to. Software looks handles up in the map. Once a handle is in the map, the directory does not check it again, and does not check whether its domain is still there. The directory does not record that a handle has become invalid; each device records that for itself (see Invalid Handles).
+As in atproto, the software that uses a handle checks this link for itself. The **directory**, the public server that keeps the `did:zu` operation log (currently `https://plc.zuzalu.ink`), stores DID documents, with the handles they claim written in them, but does not check those handles: it does not look up domains, and does not record which handles are valid. Each device records for itself which handles no longer confirm their DIDs (see Invalid Handles). Whether hosts look up handles is not specified yet.
 
-Lookups go to the directory because keys stay with the people who own them. No hosting server holds a person's keys or always answers for them, the way an atproto PDS does, so the directory is the place every city can ask.
-
-This document covers handle syntax, how a DID claims a handle, how a domain confirms one, how the directory checks and records them, and how software looks them up. Cities and hosts, and how their DIDs are marked, are left to other documents.
+This document covers handle syntax, how a DID claims a handle, how a domain confirms one, and how software resolves a handle and checks it in both directions. Cities and hosts, and how their DIDs are marked, are left to other documents.
 
 ## Handle Identifier Syntax
 
@@ -38,7 +36,7 @@ A reference regular expression (regex) for the handle syntax is:
 
 ## Additional Non-Syntax Restrictions
 
-"Reserved" top-level domains should not fail syntax validation, but they must immediately fail any attempt at registration, confirmation, lookup, etc. See also: [https://en.wikipedia.org/wiki/Top-level_domain#Reserved_domains](https://en.wikipedia.org/wiki/Top-level_domain#Reserved_domains)
+"Reserved" top-level domains should not fail syntax validation, but they must immediately fail any attempt at registration, confirmation, resolution, etc. See also: [https://en.wikipedia.org/wiki/Top-level_domain#Reserved_domains](https://en.wikipedia.org/wiki/Top-level_domain#Reserved_domains)
 
 `.local` hostnames (for mDNS on local networks) should not be used in Zu.
 
@@ -118,7 +116,7 @@ A claim is the DID owner's own statement. For `did:zu` it is signed with one of 
 
 The domain of a handle confirms the DID with one of two methods. Both demonstrate a reasonable degree of authority over the domain name at a point in time, and are relatively efficient to look up. A city that issues handles under its own domain confirms them there.
 
-The DNS TXT method is the recommended method for individual handle configuration, but the directory should fully support both methods. The intended use-case for the HTTPS method is cities and other services that issue many handles under one domain and may not have the infrastructure to automate a DNS TXT record for each.
+The DNS TXT method is the recommended method for individual handle configuration, but software that resolves handles should fully support both methods. The intended use-case for the HTTPS method is cities and other services that issue many handles under one domain and may not have the infrastructure to automate a DNS TXT record for each.
 
 ### DNS TXT Method
 
@@ -149,44 +147,30 @@ did:zu:ewvi7nxzyoun6zhxrhs64oiz
 
 The response `Content-Type` header does not need to be strictly verified.
 
-The web server's response body should not contain any prefix or suffix whitespace, but the directory should strip small amounts of prefix or suffix whitespace from the response body before attempting to parse it as a DID.
+The web server's response body should not contain any prefix or suffix whitespace, but software should strip small amounts of prefix or suffix whitespace from the response body before attempting to parse it as a DID.
 
 Secure HTTPS on the default port (443) is required for all real-world confirmations. Unsecured HTTP can only be used for local development and testing.
 
 HTTP redirects (eg, 301, 302) are allowed, up to a reasonable number of redirect hops.
 
-## Directory Verification
+## Handle Resolution
 
-The directory checks a handle in both directions: the DID document claims it (see Claiming a Handle), and the domain confirms the same DID (see Domain Confirmation). Only when both agree is the handle valid for that DID. Handles should not be trusted or considered valid until both directions are confirmed, otherwise anybody could create handle aliases for third-party DIDs.
+Software resolves a handle to a DID by itself, with the methods in Domain Confirmation. A handle should not be trusted or considered valid until the DID is also resolved and its current DID document is confirmed to claim the handle (see Claiming a Handle). The link between handle and DID must be confirmed in both directions, otherwise anybody could create handle aliases for third-party DIDs.
 
-The directory checks a handle:
+Software that starts from a DID reads the claimed handles from its DID document, and checks a handle in the same two directions before treating it as valid.
 
-- as soon as it accepts a `did:zu` operation that adds the handle to a DID's `alsoKnownAs`; and
-- the first time the handle is looked up and is not yet in the map.
+The DID document of a `did:zu` is fetched from the directory; a `did:web` document is fetched from its domain over HTTPS (see [DIDs](did.md)). The directory does not check the handles a `did:zu` document claims; like any claim, they do not by themselves prove that a handle belongs to the DID (see Claiming a Handle).
 
-It does not check a handle again once the handle is in the map.
+Resolution best practices:
 
-The directory keeps the `did:zu` operation log itself. A `did:web` document is not hosted by the directory, so it is fetched from the domain over HTTPS at each check.
-
-When a check passes, the directory records the handle, the DID and the time of the check. These records form the map. A check that fails is not recorded.
-
-The directory follows these practices when checking:
-
-- It is ok to attempt both methods in parallel, and to use the first successful result available. If the two methods return conflicting results (aka, different DIDs), the DNS TXT result should be preferred, though it is also acceptable to record neither and check again later.
+- It is ok to attempt both methods in parallel, and to use the first successful result available. If the two methods return conflicting results (aka, different DIDs), the DNS TXT result should be preferred, though it is also acceptable to record the result as ambiguous and try again later.
+- It is considered a best practice to cache resolution results, up to some lifetime, and to re-resolve periodically. DNS TTL values provide a possible cache lifetime, but are probably too aggressive (aka, too short a lifetime) for handles.
 - Use of a recursive DNS resolver can help with propagation delays, which are important when a DID adds a handle and waits for confirmation.
-- Checks should be made from a relatively trusted network environment and configuration. Running them from multiple regions and environments can help mitigate (though not fully resolve) concerns about traffic manipulation or intentionally segmented responses.
-
-## Handle Lookup
-
-Software that needs the DID for a handle asks the directory and uses the map's answer. The answer gives the DID and the time of the check that confirmed it.
-
-Software that starts from a DID reads the claimed handles from its DID document.
-
-The lookup endpoint and its response format are not yet specified.
+- It is beneficial to make resolution requests from a relatively trusted network environment and configuration. Running them from multiple regions and environments can help mitigate (though not fully resolve) concerns about traffic manipulation or intentionally segmented responses.
 
 ## Invalid Handles
 
-The DID document does not say which of its handles are invalid, and the directory does not record it. Each device records for itself that a handle no longer confirms the DID that claims it. Software can show the special handle value `handle.invalid` when none of a DID's handles works. This handle can not be used in most situations (search queries, requests, etc).
+The DID document does not say which of its handles are invalid, and the directory does not record it. When software finds that a handle no longer confirms the DID that claims it, the device records that for itself and treats the handle as invalid. Software can show the special handle value `handle.invalid` when none of a DID's handles works. This handle can not be used in most situations (search queries, requests, etc).
 
 A DID with an invalid handle is still a valid DID: its operation log, keys and data are unaffected. Software should keep displaying its content (to prevent breakage), either without a handle or with a clear indication that the handle is invalid. The DID owner can claim another handle at any time.
 
@@ -212,13 +196,15 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 ## Security and Privacy Considerations
 
-The directory is trusted for lookups. It could answer with the wrong DID, or give different answers to different askers. A current answer can be checked against the DID document's claim and against the domain, but nothing in this draft lets anyone check the map's past records after the fact. How the map is witnessed is an open question.
+The directory does not decide which handles are valid: it does not check the handles that DID documents claim, and software checks every handle against the handle's domain. For `did:zu`, the claims come from the operation log the directory serves, which is trusted only to a limited degree (see [DIDs](did.md)): by serving an older fork or holding back an operation, it can make a DID appear to claim a handle it has dropped, or not to claim one it has added. It cannot make a domain confirm a DID.
+
+Resolution relies on DNS and HTTPS. Whoever controls the DNS records or the web server of a domain controls which DID its handles confirm, and an attacker on the network path can try to manipulate the answers (see the practices in Handle Resolution).
 
 Authority over a domain is authority to confirm handles under it. If a city's domain expires or changes hands, the new holder can confirm handles under it for other DIDs. The earlier handles under it then stop confirming the DIDs that claimed them; those DIDs, and their data, are not affected.
 
 Handles which look similar to a well-known domain present security and impersonation challenges. For example, handles like `paypa1.com` or `paypal.cc` being confused for `paypal.com`. Very long handles can result in similar issues when truncated at the start or end (`paypal.com…`).
 
-DID documents, and therefore claimed handles, are public. The directory can see which handles are looked up, and by whom.
+DID documents, and therefore claimed handles, are public. The directory can see which `did:zu` documents are fetched, and by whom. The web server of a handle's domain can see who fetches its `/.well-known/zu-did`, and DNS resolvers on the way can see which `_zu` names are looked up.
 
 ## Possible Future Changes
 
@@ -228,8 +214,6 @@ It is conceivable that `.onion` handles would be allowed at some point in the fu
 
 Questions still open in this draft:
 
-- How long past results are kept.
 - Whether a domain's confirmation should be signed with the city's `did:zu` key, so that a past result can be checked again after the city is gone, as in DIF's [Well-Known DID Configuration](https://identity.foundation/well-known-did-configuration/resources/did-configuration).
-- Who witnesses the map's records, and whether several witnesses are required.
 - Whether 10 `alsoKnownAs` entries, and so at most 10 handles per DID, is enough.
-- The lookup endpoint and its response format.
+- Whether hosts look up handles, and if so how.

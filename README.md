@@ -6,7 +6,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory and its map, and how records are named, addressed and fetched.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, and how records are named, addressed and fetched.
 
 Being designed now, not specified yet:
 
@@ -21,7 +21,7 @@ Not specified yet, to be designed later:
 | Module | Covers | Where |
 |---|---|---|
 | did | The DID methods Zu accepts, `did:zu` and `did:web`, and what Zu reads from a DID document | [`specs/did.md`](specs/did.md) (draft). The `did:zu` method itself: [`specs/did-zu.md`](specs/did-zu.md), the authoritative copy; reference implementation [4seas-community/did-method-zu](https://github.com/4seas-community/did-method-zu); directory `https://plc.zuzalu.ink` |
-| map | Handles such as `alice.4seas.example`, checked by the directory and looked up in its map | [`specs/map.md`](specs/map.md) (draft) |
+| map | Handles such as `alice.4seas.example`: how a DID claims them, how a domain confirms them, and how software resolves them | [`specs/map.md`](specs/map.md) (draft) |
 | data model | How records and messages are encoded, hashed and linked: DRISL, DASL CIDs, blob references | [`specs/data-model.md`](specs/data-model.md) (draft) |
 | nsid | Names of record types, a reversed domain followed by a name, such as `com.example.note` | [`specs/nsid.md`](specs/nsid.md) (draft) |
 | path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
