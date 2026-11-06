@@ -10,11 +10,11 @@ When data needs to be signed, referenced by content hash, or stored compactly, i
 
 A distinct piece of data is a **node**. A node encoded in DRISL is a **block**. A node may contain nested maps and lists. Nodes may refer to each other by URL or URI, as JSON on the web does, or strongly by hash, which is called a **link**. Linked nodes can form larger structures such as [Merkle trees](https://en.wikipedia.org/wiki/Merkle_tree) and [directed acyclic graphs](https://en.wikipedia.org/wiki/Directed_acyclic_graph). A link can also point to arbitrary binary data, a **blob**.
 
-A link does not say where on the network its content can be found; the protocol context decides how to fetch it. A link is "self-certifying": whatever is returned can be checked against the hash in the link. Content can therefore be passed on by anyone and still be trusted, even when it comes from an untrusted party.
+A link does not say where on the network its content can be found; how content is fetched by its CID is specified in [Retrieval](retrieval.md). A link is "self-certifying": whatever is returned can be checked against the hash in the link. Content can therefore be passed on by anyone and still be trusted, even when it comes from an untrusted party.
 
 Links are written as [Content Identifiers](https://dasl.ing/cid.html) (CIDs), which have a binary and a string form. A CID carries a code that says whether it points to a node (DRISL) or to raw bytes. The CIDs allowed in Zu are listed below.
 
-This document covers the data types, blob references, the JSON representation and the CID formats. How record types are named, how records are grouped into a person's data, how data is moved between servers, and how data is packed into archives are left to other documents.
+This document covers the data types, blob references, the JSON representation and the CID formats. Record types are named by [NSIDs](nsid.md), records are addressed by [paths](path.md), and content is fetched by CID as described in [Retrieval](retrieval.md). How records are grouped into an individual's data, how data is moved between servers, and how data is packed into archives are left to other documents.
 
 ## Relationship With DASL and IPLD
 
@@ -147,5 +147,5 @@ More hash types are likely to be added to the blessed set of CIDs. [BDASL](https
 
 Questions still open in this draft:
 
-- How record types are named and marked in the data.
+- Whether a record also states its type inside its own data, besides its path.
 - Which documents use DASL [CAR](https://dasl.ing/car.html) archives to move or export data in bulk.
