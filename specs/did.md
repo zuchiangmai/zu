@@ -168,7 +168,7 @@ There is a chance that the set of accepted DID methods will slowly expand over t
 Questions still open in this draft:
 
 - Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
-- Which `service` entries people's DID documents carry.
+- Which `service` entries people's and hosts' DID documents carry. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
 - How a city's DID document is marked, to be specified in a separate document.
 - How a host's DID document is marked.
 - Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.

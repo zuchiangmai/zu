@@ -4,6 +4,18 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 **Version:** this is Zu v0.3.1. The earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
 
+## Scope
+
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory and its map, and how records are named, addressed and fetched.
+
+Being designed now, not specified yet:
+
+- Data exchanged between cities.
+
+Not specified yet, to be designed later:
+
+- Peer-to-peer connections between people of different cities. The specifications leave room for a host to run an [iroh](https://www.iroh.computer) relay for such connections: a DID document may later carry a service entry for it (see [DIDs](specs/did.md)), and content may later be fetched over such connections besides HTTPS (see [Retrieval](specs/retrieval.md)).
+
 ## Modules
 
 | Module | Covers | Where |
