@@ -177,6 +177,8 @@ The hard maximum DID length limit may be reduced, at the protocol syntax level. 
 
 There is a chance that the set of accepted DID methods will slowly expand over time.
 
+The limit of 10 `verificationMethods` entries for `did:zu` is used for now and will be raised, so that each device and web origin can hold its own Zu signing key. On this point `did:zu` departs from `did:plc`.
+
 Questions still open in this draft:
 
 - Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
@@ -185,4 +187,4 @@ Questions still open in this draft:
 - How a host's DID document is marked.
 - Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
-- Whether 10 `verificationMethods` entries, and so at most 10 Zu signing keys per DID, is enough when each device and web origin holds its own key.
+- How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
