@@ -151,6 +151,18 @@ For example, two Zu signing keys in a `did:zu` document:
 
 Zu does not yet have a cryptography specification of its own.
 
+## Signing In to Another City
+
+A person's private Zu signing keys are held in the web origins where they were created, such as the site of city B where the person signed up. A page from another origin, such as the site of city A, cannot read them.
+
+For now, a person signs in to city A with the Zu signing key held in the web origin of city B:
+
+- City A's page does not create a Zu signing key of its own, and no key is added to the DID for city A.
+- When city A needs something signed, city A's page asks city B's page to sign it. City B's page signs with the key it holds and returns only the signature. The private key never leaves city B's origin.
+- City A checks every signature against the Zu signing keys in the DID document, as it checks any other signature. City A does not need to trust city B's host.
+
+Future work: introduce a decentralized group key mechanism. What is not specified yet is listed under Possible Future Changes.
+
 ## Usage and Implementation Guidelines
 
 Protocol implementations should be flexible to processing content containing DIDs based on unsupported DID methods. This is important to allow gradual evolution of the protocol ecosystem over time. In other words, implementations should distinguish between at least the distinct cases "invalid DID syntax", "unsupported DID method" and "supported DID method, but specific DID resolution failed".
@@ -171,6 +183,8 @@ DID documents are public, and so are the handles and keys they list. The directo
 
 Each Zu signing key can sign for the DID until a rotation key removes it from the document. Every key added or removed is public, and for `did:zu` stays in the audit log, so a DID with one key for each device or web origin reveals how many keys it has and when they changed.
 
+When a person signs in to city A with a key held in the web origin of city B, whoever controls the script served from city B's origin can sign for the person, and so can city A for whatever city B's page agrees to sign at its request. While city B's site is unreachable, or after the browser has cleared city B's storage, the person cannot sign in to city A this way.
+
 ## Possible Future Changes
 
 The hard maximum DID length limit may be reduced, at the protocol syntax level. We are not aware of any DID methods that we would consider supporting which have identifiers longer than, say, 256 characters.
@@ -178,6 +192,8 @@ The hard maximum DID length limit may be reduced, at the protocol syntax level. 
 There is a chance that the set of accepted DID methods will slowly expand over time.
 
 The limit of 10 `verificationMethods` entries for `did:zu` is used for now and will be raised, so that each device and web origin can hold its own Zu signing key. On this point `did:zu` departs from `did:plc`.
+
+Signing in to another city with the key held in city B's web origin is a first version. Future work: introduce a decentralized group key mechanism.
 
 Questions still open in this draft:
 
@@ -188,3 +204,7 @@ Questions still open in this draft:
 - Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
 - How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
+- How city A's page finds the page of city B that holds the person's key, and how the two pages exchange requests and signatures.
+- What a sign-in signature covers, so that it cannot be used to sign in to any other city.
+- Which requests from city A city B's page signs without asking the person, so that a compromised city A cannot get records signed that act for the person in other cities.
+- How a person signs in to city A when city B's site is gone or its browser storage has been cleared.
