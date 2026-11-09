@@ -11,6 +11,10 @@ Changed:
 - [Map](specs/map.md) and [DIDs](specs/did.md): the directory stores DID documents, with the handles written in them, but no longer checks those handles, and keeps no record of confirmed handles. As in atproto, software resolves each handle through DNS or HTTPS and checks it in both directions itself; caching results and re-resolving them periodically is recommended. Whether hosts look up handles is a new open question; the questions on how long past results are kept, who witnesses the map's records, and the lookup endpoint are dropped.
 - [DIDs](specs/did.md): a DID may have several Zu signing keys, for example one for each device and web origin that holds a private key. Every `verificationMethod` whose fragment is `zu`, or `zu-` followed by eight characters derived from the key, is a Zu signing key, and all of them stand for the DID. Previously only the first `#zu` key was used, and a DID used the same signing key in every city. How a signing key relates to the handles a DID claims is a new open question. The limit of 10 `verificationMethods` entries is used for now and will be raised for `did:zu`, departing from `did:plc`; how far is a new open question.
 
+Added:
+
+- [DIDs](specs/did.md): for now, a person signs in to city A with the Zu signing key held in the web origin of city B, where the person signed up. City A's page asks city B's page to sign, gets back only the signature, and adds no key of its own to the DID. This is a first version. Future work: introduce a decentralized group key mechanism. How the two pages find each other and exchange messages, what a sign-in signature covers, which requests city B's page signs without asking, and what happens when city B's site is gone are new open questions.
+
 ## v0.3.1 (2026-11-06)
 
 Added:
