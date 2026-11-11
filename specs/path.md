@@ -178,6 +178,8 @@ Query and fragment parts, and relative references between records of the same in
 
 The constraints on key syntax may be relaxed in the future to allow non-ASCII Unicode characters. Keys will always be valid Unicode, never relaxed to allow arbitrary byte-strings. The `%` character is reserved for possible use with URL encoding, but such encoding is not currently supported.
 
+Direction for a later version: everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. A path names an individual, a type and a key, and no application. Different applications can then be created freely over the same records, while the data is more durable. For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. Neither the event log nor the causal log has a format yet.
+
 Questions still open in this draft:
 
 - Which kinds of keys a type uses. atproto names four kinds: `tid`, `nsid`, `literal:<value>` and `any`.

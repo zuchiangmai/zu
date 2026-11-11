@@ -14,6 +14,11 @@ Being designed now, not specified yet:
 
 - Data exchanged between cities.
 
+Direction set, not specified yet:
+
+- Everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. Different applications can then be created freely, while the data is more durable (see [Path](specs/path.md#possible-future-changes)).
+- For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. The format is not designed yet.
+
 Not specified yet, to be designed later:
 
 - Peer-to-peer connections between people of different cities. The specifications leave room for a host to run an [iroh](https://www.iroh.computer) relay for such connections: a DID document may later carry a service entry for it (see [DIDs](specs/did.md)), and content may later be fetched over such connections besides HTTPS (see [Retrieval](specs/retrieval.md)).
