@@ -2,6 +2,12 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
+## Unreleased
+
+Added:
+
+- [README](README.md) and [Path](specs/path.md): two directions are stated, without a format. Everything is a plugin: the data is an event log, so an application is derived data, one view among others, and different applications can be created freely while the data is more durable. And for the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs.
+
 ## v0.3.2 (2026-11-09)
 
 Added:
