@@ -21,7 +21,7 @@ Direction set, not specified yet:
 
 Not specified yet, to be designed within v0.3:
 
-- How data is synchronized.
+- How data is synchronized. The direction is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567)). Which form of RBSR, what is reconciled, and the format are not designed yet.
 - How a request to a host is authenticated.
 
 Not specified yet, to be designed later:
