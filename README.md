@@ -8,7 +8,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, and how records are named, addressed and fetched.
 
-It also specifies, as a first version, how a person who signed up in one city signs in to another city with the key held in the first city's web origin (see [DIDs](specs/did.md#signing-in-to-another-city)). Future work: introduce a decentralized group key mechanism.
+It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
 Being designed now, not specified yet:
 

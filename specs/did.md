@@ -157,15 +157,25 @@ Zu does not yet have a cryptography specification of its own.
 
 ## Signing In to Another City
 
-A person's private Zu signing keys are held in the web origins where they were created, such as the site of city B where the person signed up. A page from another origin, such as the site of city A, cannot read them.
+A person's private Zu signing keys are held in the web origins that use them, such as the site of city B where the person signed up. A page from another origin, such as the site of city A, cannot read them.
 
-For now, a person signs in to city A with the Zu signing key held in the web origin of city B:
+A person signs in to city A by handing the Zu signing key held in city B's web origin over to city A's page. Afterwards both origins hold the same key, and city A's page signs with it by itself. No key is added to the DID for city A.
 
-- City A's page does not create a Zu signing key of its own, and no key is added to the DID for city A.
-- When city A needs something signed, city A's page asks city B's page to sign it. City B's page signs with the key it holds and returns only the signature. The private key never leaves city B's origin.
-- City A checks every signature against the Zu signing keys in the DID document, as it checks any other signature. City A does not need to trust city B's host.
+The same handover brings the key to another device: to the same city on another device, or to another city on another device.
 
-Future work: introduce a decentralized group key mechanism. What is not specified yet is listed under Possible Future Changes.
+Signing in this way does not change the DID document, and needs no rotation key. A person who is already signed in somewhere keeps the handles they already have, and uses them in city A as well.
+
+A handover follows these rules:
+
+- A key is handed over only after the person has chosen to do so in the page that holds it. Being opened by another page, by a link or by a scanned code must never by itself hand over a key.
+- Before it hands the key over, the page that holds it shows who receives it: the address of the receiving site and the name of its city.
+- The receiving page checks, before it uses the key, that its public key is one of the Zu signing keys in the person's DID document. A key that does not match is discarded.
+- On the same device, the receiving page opens the page that holds the key in a window of its own, and the two pages exchange the request and the key directly. Between devices, the receiving page shows a code carrying a public key made for this one handover; the key is sent encrypted to that public key, and a host that relays it sees only ciphertext.
+- Only Zu signing keys are handed over. A rotation key is never handed to another origin.
+
+So that a key can be sent to another device, the page that holds a Zu signing key stores it in a form it can export.
+
+How cities relate to signing keys, for example whether each city has a key of its own, is left to a later design. Future work: introduce a decentralized group key mechanism. What is not specified yet is listed under Possible Future Changes.
 
 ## Usage and Implementation Guidelines
 
@@ -174,6 +184,8 @@ Protocol implementations should be flexible to processing content containing DID
 While longer DIDs are supported in the protocol, a good best practice is to use relatively short DIDs, and to avoid DIDs longer than 64 characters.
 
 DIDs are case-sensitive. While the currently-supported methods are *not* case sensitive, and could be safely lowercased, protocol implementations should reject DIDs with invalid casing. It is permissible to attempt case normalization when receiving user-controlled input, such as when parsing public URL path components, or text input fields.
+
+When a DID is created, software should require the person to save the rotation key in a password manager before going on.
 
 Test vectors for this specification will be published in [`vectors/`](../vectors/).
 
@@ -191,7 +203,7 @@ Each Zu signing key can sign for the DID until a rotation key removes it from th
 
 The host that runs a city holds the city's keys, so whoever controls the host can sign for every city it runs.
 
-When a person signs in to city A with a key held in the web origin of city B, whoever controls the script served from city B's origin can sign for the person, and so can city A for whatever city B's page agrees to sign at its request. While city B's site is unreachable, or after the browser has cleared city B's storage, the person cannot sign in to city A this way.
+Every origin that has received a person's Zu signing key holds the same key, in a form it can export. Whoever controls the script served from any of these origins can copy the key and sign for the person anywhere, until a rotation key removes that key from the DID document. A key that has been handed over cannot be taken back: removing it means replacing it in every place that uses it.
 
 ## Possible Future Changes
 
@@ -201,7 +213,7 @@ There is a chance that the set of accepted DID methods will slowly expand over t
 
 The limit of 10 `verificationMethods` entries for `did:zu` is used for now and will be raised, so that each device and web origin can hold its own Zu signing key. On this point `did:zu` departs from `did:plc`.
 
-Signing in to another city with the key held in city B's web origin is a first version. Future work: introduce a decentralized group key mechanism.
+Handing the same Zu signing key to every city a person signs in to is a first version. How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
 A city's keys are held by its host for now. Control of a city's keys by several signers is left to a future version.
 
@@ -213,7 +225,5 @@ Questions still open in this draft:
 - How a host's DID document is marked.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
 - How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
-- How city A's page finds the page of city B that holds the person's key, and how the two pages exchange requests and signatures.
-- What a sign-in signature covers, so that it cannot be used to sign in to any other city.
-- Which requests from city A city B's page signs without asking the person, so that a compromised city A cannot get records signed that act for the person in other cities.
-- How a person signs in to city A when city B's site is gone or its browser storage has been cleared.
+- How the receiving page finds the page that holds the person's key, and the formats of the request and of the key that is handed over, on the same device and between devices.
+- How a rotation key is used after it has been saved, for example to replace a Zu signing key that was lost, and whether any origin keeps it.
