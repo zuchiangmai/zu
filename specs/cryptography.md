@@ -41,6 +41,7 @@ The kinds of signed data defined so far:
 | `$type` | `v` | Defined in |
 |---|---|---|
 | `record` | `1` | [Records](record.md) |
+| `auth` | `1` | [Request Authentication](auth.md) |
 
 ## Verifying Signatures
 
@@ -109,7 +110,7 @@ Ed25519 is not resistant to attacks by large quantum computers. Neither are the 
 
 The set of supported cryptographic systems is expected to evolve slowly. There are significant interoperability and implementation advantages to having as few systems as possible at any point in time.
 
-More kinds of signed data will be added to the table under Signing Data as they are specified, for example the statement with which software proves to a host which DID it acts for.
+More kinds of signed data will be added to the table under Signing Data as they are specified.
 
 Data encryption may be specified in a later version.
 

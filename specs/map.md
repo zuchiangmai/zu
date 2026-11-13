@@ -153,6 +153,8 @@ Secure HTTPS on the default port (443) is required for all real-world confirmati
 
 HTTP redirects (eg, 301, 302) are allowed, up to a reasonable number of redirect hops.
 
+The response should carry the header `Access-Control-Allow-Origin: *`, so that a page of another origin, such as the site of another city, can read it and check the handle by itself.
+
 ## Handle Resolution
 
 Software resolves a handle to a DID by itself, with the methods in Domain Confirmation. A handle should not be trusted or considered valid until the DID is also resolved and its current DID document is confirmed to claim the handle (see Claiming a Handle). The link between handle and DID must be confirmed in both directions, otherwise anybody could create handle aliases for third-party DIDs.

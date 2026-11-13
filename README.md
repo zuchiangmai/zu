@@ -22,7 +22,6 @@ Direction set, not specified yet:
 Not specified yet, to be designed within v0.3:
 
 - How data is synchronized. The direction is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567)). Which form of RBSR, what is reconciled, and the format are not designed yet.
-- How a request to a host is authenticated.
 
 Not specified yet, to be designed later:
 
@@ -42,6 +41,7 @@ Not specified yet, to be designed later:
 | path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
 | retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
 | cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
+| auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |
 | record | The signed record: a signed header and a body linked by CID, links to earlier records, time, and which record a path refers to | [`specs/record.md`](specs/record.md) (draft) |
 
 The other modules of v0.3 have not been designed yet.
