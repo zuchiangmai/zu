@@ -38,6 +38,7 @@ Not specified yet, to be designed later:
 | map | Handles such as `alice.4seas.example`: how a DID claims them, how a domain confirms them, and how software resolves them | [`specs/map.md`](specs/map.md) (draft) |
 | data model | How records and messages are encoded, hashed and linked: DRISL, DASL CIDs, blob references | [`specs/data-model.md`](specs/data-model.md) (draft) |
 | nsid | Names of record types, a reversed domain followed by a name, such as `com.example.note` | [`specs/nsid.md`](specs/nsid.md) (draft) |
+| type | Defining a type of record: what its body holds, which keys it uses, and where its definition lives | [`specs/type.md`](specs/type.md) (draft) |
 | path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
 | retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
 | cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |

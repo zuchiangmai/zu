@@ -55,7 +55,7 @@ To stay compatible with the default number type of JavaScript, integers should b
 
 Data can be checked against the data model without knowing what kind of record it is. For example, a JSON object containing a `$bytes` object whose value is a boolean instead of a base64 string is valid JSON, but never valid in the Zu data model.
 
-Field names starting with `$` are reserved for the data model and the protocol, in both JSON and CBOR. Examples are `$bytes` and `$link` (used in JSON) and `$type` (used by blob references and by signed data, see [Cryptography](cryptography.md)). Implementations should ignore `$` fields they do not know, so that the protocol can evolve. Applications should not use or invent `$` fields of their own.
+Field names starting with `$` are reserved for the data model and the protocol, in both JSON and CBOR. Examples are `$bytes` and `$link` (used in JSON) and `$type` (used by blob references, by signed data, see [Cryptography](cryptography.md), and by the values of a union, see [Types](type.md)). Implementations should ignore `$` fields they do not know, so that the protocol can evolve. Applications should not use or invent `$` fields of their own.
 
 ### Nullable and False-y
 

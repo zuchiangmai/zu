@@ -2,13 +2,13 @@
 
 A specification for Namespaced Identifiers, the names of record types in Zu.
 
-This document is adapted, with changes, from the [AT Protocol NSID specification](https://atproto.com/specs/nsid) (bluesky-social/atproto-website, commit `e079bd4`), which is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
+This document is adapted, with changes, from the [AT Protocol NSID specification](https://atproto.com/specs/nsid) (bluesky-social/atproto-website, commit `e079bd4`), which is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the changes that may still come are listed under Possible Future Changes.
 
 Namespaced Identifiers (NSIDs) name the types of records in Zu. The type of a record is the second segment of its [path](path.md). For example, `com.example.note`.
 
 The basic structure and semantics of an NSID are a fully-qualified hostname in reverse domain-name order, followed by an additional name segment. The hostname part is the **domain authority,** and the final segment is the **name**.
 
-This document covers NSID syntax. A record states its type in its signed header (see [Records](record.md)). How the records of a type are defined and checked is left to another document.
+This document covers NSID syntax. A record states its type in its signed header (see [Records](record.md)), and how the records of a type are defined and checked is specified in [Types](type.md).
 
 ## NSID Syntax
 
@@ -92,7 +92,3 @@ NSIDs which look similar to a well-known domain present the same impersonation c
 It is conceivable that NSID syntax would be relaxed to allow Unicode characters in the final segment.
 
 The "glob" syntax variation may be modified to make the distinction between single-level and nested matching more explicit.
-
-Questions still open in this draft:
-
-- How the records of a type are defined and checked. Zu has no schema language.

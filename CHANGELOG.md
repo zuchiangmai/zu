@@ -2,6 +2,17 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
+## Unreleased
+
+Added:
+
+- [Types](specs/type.md): a type of record is defined by a record of its own, written by whoever controls the domain in the type's name, and found by resolving that domain as a handle. A definition states `v`, `doc`, `key`, `body` and `defs`; a field description names one of the data model's types, or `ref`, `union` or `any`, and may carry `req`, `fields`, `items`, `format`, `min`, `max`, `enum`, `const`, `accept` and `nullable`. The `max` of a string counts Unicode code points. A time in a body is an integer in milliseconds, as in a record header, and there is no string format for it. A `ref` names a shape in this definition, in another definition, or the body of another type; the value of a `union` states which shape it follows in `$type`, and a shape its definition does not list is kept unchecked. Keys are `self` or `any`. A record whose type is unknown is stored and passed on unchecked, and the default is to check a record only when its definition is known. A record that fails the check is not used, but it is still a validly signed record and replaces the records it follows, so that which record a path refers to does not depend on which definitions software knows. A definition may change only in ways that keep records written for the old and for the new definition passing each other's check; the constraints on a field are not changed. The document is adapted from the atproto Lexicon specification, with Lexicon's service endpoints left out and the names in Zu's own style. The types the protocol itself defines are named under the domain authority `ink.zuzalu`, and the one defined here is `ink.zuzalu.type`. The open questions on how the records of a type are defined, and on which kinds of keys a type uses, are dropped.
+
+Changed:
+
+- [Records](specs/record.md) states that whether a body follows the definition of its type is a separate check, which does not change whether a record is valid or which record a path refers to.
+- [Data Model](specs/data-model.md) lists the values of a union among the uses of `$type`.
+
 ## v0.3.4 (2026-11-13)
 
 Added:

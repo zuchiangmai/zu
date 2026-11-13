@@ -35,6 +35,8 @@ Field names are shared across types instead of invented per type, the way the fi
 | Width and height | `w`, `h` |
 | The person concerned, the state something changes to, a yes or no | `who`, `to`, `ok` |
 
+A time is an integer, in milliseconds since 1970-01-01T00:00:00Z, in a record body as in a record header. A zone is the name of a time zone in the IANA database, such as `Asia/Bangkok`.
+
 The list is for the bodies of records: a type that needs a word for one of these meanings uses the word given here. It grows when a meaning that several types share gets a name.
 
 Fields defined by another standard keep the names that standard gives them, even when those names are in camel case. Examples are `alsoKnownAs`, `verificationMethod` and `publicKeyMultibase` in DID documents.
