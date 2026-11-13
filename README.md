@@ -2,7 +2,7 @@
 
 Zu is the protocol behind polis, written down as specifications that other software can implement without reading the polis code.
 
-**Version:** this is Zu v0.3.3. The earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
+**Version:** this is Zu v0.3.4. The earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Scope
 
