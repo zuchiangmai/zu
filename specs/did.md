@@ -19,6 +19,8 @@ It is possible that other methods will be accepted in the future, but the intent
 
 `did:plc` is not accepted. `did:plc:<id>` and `did:zu:<id>` are different DIDs even when the identifier part is the same, and software must not treat them as equivalent.
 
+`did:webvh` is not accepted. A `did:web` document that a `did:webvh` DID publishes in parallel is accepted as `did:web`, under its `did:web` identifier.
+
 ### `did:zu` in Zu
 
 The following limits of `did:plc` apply to `did:zu` unchanged, and are enforced by the directory:
@@ -115,6 +117,8 @@ Zu does not yet define `service` entries for people. How the DID document of a c
 
 A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed in the same way (see [Map](map.md)). For example, a host may claim `zu://pol.4seas.example`.
 
+A host may run several cities. Each city has a DID of its own, with keys of its own that it does not share with any other city on the same host. For now the host that runs a city holds the city's keys.
+
 Other features may make use of further `verificationMethod` keys and `service` entries.
 
 When parsing the `id` field in object elements of the `service` and `verificationMethod` arrays, implementations should support both relative fragment syntax (eg, `"id": "#zu"`) and fully-qualified syntax (eg, `"id": "did:web:example.com#zu"`).
@@ -183,6 +187,8 @@ DID documents are public, and so are the handles and keys they list. The directo
 
 Each Zu signing key can sign for the DID until a rotation key removes it from the document. Every key added or removed is public, and for `did:zu` stays in the audit log, so a DID with one key for each device or web origin reveals how many keys it has and when they changed.
 
+The host that runs a city holds the city's keys, so whoever controls the host can sign for every city it runs.
+
 When a person signs in to city A with a key held in the web origin of city B, whoever controls the script served from city B's origin can sign for the person, and so can city A for whatever city B's page agrees to sign at its request. While city B's site is unreachable, or after the browser has cleared city B's storage, the person cannot sign in to city A this way.
 
 ## Possible Future Changes
@@ -195,13 +201,14 @@ The limit of 10 `verificationMethods` entries for `did:zu` is used for now and w
 
 Signing in to another city with the key held in city B's web origin is a first version. Future work: introduce a decentralized group key mechanism.
 
+A city's keys are held by its host for now. Control of a city's keys by several signers is left to a future version.
+
 Questions still open in this draft:
 
 - Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
 - Which `service` entries people's and hosts' DID documents carry. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
 - How a city's DID document is marked, to be specified in a separate document.
 - How a host's DID document is marked.
-- Whether `did:webvh` is accepted as a method of its own. A `did:webvh` DID can already publish a parallel `did:web` document, which this specification accepts as `did:web`.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
 - How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
 - How city A's page finds the page of city B that holds the person's key, and how the two pages exchange requests and signatures.
