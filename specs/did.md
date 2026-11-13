@@ -113,7 +113,7 @@ A DID may have several Zu signing keys, for example one for each device and web 
 
 At least one valid Zu signing key is required for most Zu functionality. A DID with no valid key in its document is likely broken.
 
-Zu does not yet define `service` entries for people. How the DID document of a city is marked is specified in a separate document.
+A person's DID document carries no `service` entry for where the person's data is. Software looks for it at the domains of the handles the DID claims (see [Map](map.md) and [Paths](path.md)). How the DID document of a city is marked is specified in a separate document.
 
 A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed in the same way (see [Map](map.md)). For example, a host may claim `zu://pol.4seas.example`.
 
@@ -185,6 +185,8 @@ For `did:web`, whoever controls the domain controls the DID. If the domain is lo
 
 DID documents are public, and so are the handles and keys they list. The directory can see which DIDs are resolved, and by whom.
 
+The handles a DID claims are also where its data is looked for. A DID document therefore shows which cities a person holds a handle in, and for `did:zu` the audit log shows when each handle was added and removed.
+
 Each Zu signing key can sign for the DID until a rotation key removes it from the document. Every key added or removed is public, and for `did:zu` stays in the audit log, so a DID with one key for each device or web origin reveals how many keys it has and when they changed.
 
 The host that runs a city holds the city's keys, so whoever controls the host can sign for every city it runs.
@@ -206,7 +208,7 @@ A city's keys are held by its host for now. Control of a city's keys by several 
 Questions still open in this draft:
 
 - Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
-- Which `service` entries people's and hosts' DID documents carry. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
+- Which `service` entries hosts' DID documents carry, and whether people's carry any. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
 - How a city's DID document is marked, to be specified in a separate document.
 - How a host's DID document is marked.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.

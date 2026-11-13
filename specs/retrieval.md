@@ -6,7 +6,7 @@ Content in Zu, both DRISL blocks and blobs, is linked by CID (see [Data Model](d
 
 A link is self-certifying: whatever is returned can be checked against the hash in the link. Content can therefore be fetched from anyone, including an untrusted host, and still be trusted once it is checked.
 
-This document covers the `rasl` URL, fetching over HTTPS, checking what was fetched, and serving content. How software learns from a DID which host stores an individual's content, how content that is not public is fetched, and how data is moved in bulk are left to other documents.
+This document covers the `rasl` URL, fetching over HTTPS, checking what was fetched, and serving content. How content that is not public is fetched, and how data is moved in bulk, are left to other documents.
 
 ## RASL in Brief
 
@@ -31,6 +31,8 @@ RASL treats every response as `application/octet-stream`. The media type of a bl
 ## Hints
 
 RASL leaves it to the software where hints come from. Software may use the hints in a `rasl` URL, and any host it already knows to hold the content, such as the host it fetched the linking record from.
+
+For content linked from an individual's records, software may use as hints the domains of the handles that the individual's DID claims (see [Map](map.md)). These domains are where an individual's data is looked for (see [Paths](path.md)).
 
 ## Serving Content
 
@@ -81,6 +83,5 @@ Hash types that allow large blobs to be checked while they stream, such as BLAKE
 
 Questions still open in this draft:
 
-- How software learns from a DID which host stores the individual's content. This depends on the `service` entries of DID documents, which [DIDs](did.md) has not defined yet.
 - How content that is not public is fetched.
 - Whether every host must serve its content over RASL.

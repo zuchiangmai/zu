@@ -10,6 +10,7 @@ Added:
 
 Changed:
 
+- [Paths](specs/path.md), [Retrieval](specs/retrieval.md), [DIDs](specs/did.md) and [Map](specs/map.md): an individual's data is looked for at the domains of the handles its DID claims. A person's DID document carries no `service` entry for it, and the handle domains may be used as hints when fetching content. The open questions on where an individual's records are stored and on how software learns the host from a DID are dropped; the one on `service` entries now asks which entries hosts carry and whether people carry any. How software asks a host for records is not specified yet.
 - [DIDs](specs/did.md): `did:webvh` is not accepted as a DID method. The open question on it is dropped. A `did:web` document that a `did:webvh` DID publishes in parallel is still accepted as `did:web`.
 - [DIDs](specs/did.md): a host may run several cities. Each city has a DID and keys of its own, not shared with any other city on the same host, and held for now by the host. Control of a city's keys by several signers is left to a future version.
 - [README](README.md): the Scope section now lists what is to be designed within v0.3 (how data is synchronized, how a request to a host is authenticated) and what is left for later (data that is not public; packing, exporting and moving an individual's data; control of a city's keys by several signers).
