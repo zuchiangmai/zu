@@ -22,7 +22,7 @@ A header is a map in the [Data Model](data-model.md) with these fields, all of t
 - `$type` (string): the fixed value `record`.
 - `v` (integer): the fixed value `1`.
 - `by` (string): the DID of the individual the record belongs to (see [DIDs](did.md)).
-- `type` (string): the type of the record, an [NSID](nsid.md).
+- `type` (string): the type of the record, an [NSID](nsid.md). What the body of that type holds is stated in its definition (see [Types](type.md)).
 - `key` (string): the key of the record (see [Paths](path.md)).
 - `at` (integer): when the record was signed, in milliseconds since 1970-01-01T00:00:00Z, as reported by the signer (see Time).
 - `prev` (list of links): the CIDs of the earlier records that this record follows (see Earlier Records). The list may be empty. It has no duplicates, and is sorted by the binary form of the CIDs in ascending byte order.
@@ -83,6 +83,8 @@ A record is valid only if all of the following hold:
 - `at` is greater than the `at` of every record listed in `prev` (see Time)
 
 Software must not treat a record as the individual's until these checks have passed. A record that passes them can be trusted no matter who supplied it.
+
+Whether the body follows the definition of the record's type is a separate check (see [Types](type.md)). It does not change whether a record is valid, or which record a path refers to.
 
 ### Keys and the DID Document
 

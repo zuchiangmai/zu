@@ -2,7 +2,7 @@
 
 A specification for addressing a record by its individual, its type and its key, and for writing that address as a `zu://` URI.
 
-This document is adapted, with changes, from the AT Protocol [AT URI Scheme](https://atproto.com/specs/at-uri-scheme) and [Record Key](https://atproto.com/specs/record-key) specifications (bluesky-social/atproto-website, commit `e079bd4`), which are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
+This document is adapted, with changes, from the AT Protocol [AT URI Scheme](https://atproto.com/specs/at-uri-scheme) and [Record Key](https://atproto.com/specs/record-key) specifications (bluesky-social/atproto-website, commit `e079bd4`), which are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the changes that may still come are listed under Possible Future Changes.
 
 Every record in Zu has a **path** of three segments:
 
@@ -22,7 +22,7 @@ A path is written as a `zu://` URI, for example:
 zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self
 ```
 
-This document covers the path, the `zu://` URI syntax and the key syntax. How a record is signed, and which record a path refers to when it has been written more than once, are specified in [Records](record.md). Which kinds of keys a type uses is left to another document.
+This document covers the path, the `zu://` URI syntax and the key syntax. How a record is signed, and which record a path refers to when it has been written more than once, are specified in [Records](record.md). Which keys a type uses is stated in its definition (see [Types](type.md)).
 
 ## `zu://` URI Structure
 
@@ -179,7 +179,3 @@ Query and fragment parts, and relative references between records of the same in
 The constraints on key syntax may be relaxed in the future to allow non-ASCII Unicode characters. Keys will always be valid Unicode, never relaxed to allow arbitrary byte-strings. The `%` character is reserved for possible use with URL encoding, but such encoding is not currently supported.
 
 Direction for a later version: everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. A path names an individual, a type and a key, and no application. Different applications can then be created freely over the same records, while the data is more durable. For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](record.md) lets a record list the earlier records it follows, which is a first step in this direction. Which data is organized as causal logs is not specified yet.
-
-Questions still open in this draft:
-
-- Which kinds of keys a type uses. atproto names four kinds: `tid`, `nsid`, `literal:<value>` and `any`.
