@@ -175,6 +175,8 @@ A handover follows these rules:
 
 So that a key can be sent to another device, the page that holds a Zu signing key stores it in a form it can export.
 
+The messages and steps of a handover are specified in [Key Handover](handover.md).
+
 How cities relate to signing keys, for example whether each city has a key of its own, is left to a later design. Future work: introduce a decentralized group key mechanism. What is not specified yet is listed under Possible Future Changes.
 
 ## Usage and Implementation Guidelines
@@ -224,5 +226,4 @@ Questions still open in this draft:
 - How a host's DID document is marked.
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
 - How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
-- How the receiving page finds the page that holds the person's key, and the formats of the request and of the key that is handed over, on the same device and between devices.
 - How a rotation key is used after it has been saved, for example to replace a Zu signing key that was lost, and whether any origin keeps it.
