@@ -41,6 +41,8 @@ Not specified yet, to be designed later:
 | type | Defining a type of record: what its body holds, which keys it uses, and where its definition lives | [`specs/type.md`](specs/type.md) (draft) |
 | path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
 | retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
+| query | Asking a host for records: one record, an individual's records of a type, or a type across everyone the host holds records for | [`specs/query.md`](specs/query.md) (draft) |
+| blob | Files: how a file is given to a host, how long the host keeps it, and whom it counts against | [`specs/blob.md`](specs/blob.md) (draft) |
 | cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
 | handover | How a Zu signing key is handed from the page that holds it to another page, on the same device and between devices | [`specs/handover.md`](specs/handover.md) (draft) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |

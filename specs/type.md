@@ -114,7 +114,7 @@ A record whose key is not one that its type's `key` allows fails the check (see 
 The domain authority of an NSID, read in forward order, is a hostname: `com.example.note` has the hostname `example.com`. Software finds the definition by:
 
 - resolving that hostname as a handle, which gives a DID (see [Map](map.md));
-- fetching the record at the path `<that DID>/ink.zuzalu.type/<the NSID>`.
+- fetching the record at the path `<that DID>/ink.zuzalu.type/<the NSID>` (see [Queries](query.md)).
 
 Nothing else is needed: a definition is found through the same handle resolution as everything else, and whoever holds the domain as a handle holds the definitions under it.
 

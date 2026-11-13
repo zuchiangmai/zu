@@ -13,7 +13,7 @@ A record is made of two parts:
 
 The header is what is signed. The body is tied to it by its CID. A record can therefore be checked with its header alone, and stays checkable when its body is fetched later, held back or discarded.
 
-This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How the body of a type is defined (see [NSIDs](nsid.md)), how records are synchronized between devices and hosts, and how records that are not public are handled, are left to other documents.
+This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How the body of a type is defined is specified in [Types](type.md), and how software asks a host for records in [Queries](query.md). How records are synchronized between devices and hosts, and how records that are not public are handled, are left to other documents.
 
 ## Header
 
@@ -57,7 +57,7 @@ In JSON, a header looks like this:
 
 ## Body
 
-The body of a record is a map in the Data Model, encoded in DRISL as a block of its own. Its fields are those that the record's type defines. A body refers to files with blob references.
+The body of a record is a map in the Data Model, encoded in DRISL as a block of its own. Its fields are those that the record's type defines. A body refers to files with blob references (see [Blobs](blob.md)).
 
 The body does not state the record's path or type. The type is stated once, in the header.
 
