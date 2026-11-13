@@ -84,6 +84,8 @@ A blob reference is a map with these fields:
 - `mime` (string, required, not empty): the content type of the blob; `application/octet-stream` if not known.
 - `size` (integer, required, non-negative): the length of the blob in bytes.
 
+How a file is given to a host, and how long the host keeps it, is specified in [Blobs](blob.md).
+
 ## JSON Representation
 
 Zu uses its own conventions for JSON instead of DAG-JSON, so that links and bytes read naturally in HTTP APIs. The DAG-JSON specification itself says it is meant mainly for debugging and development, and its use of `/` as a field name is confusing.

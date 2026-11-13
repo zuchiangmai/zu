@@ -38,7 +38,7 @@ A `zu://` URI with a handle as its authority and no path is the form in which a 
 
 A path is not a *strong* reference, in that it is not content-addressed. The record at a path may change or be removed over time, or the DID itself may be deleted or unavailable. For `did:web`, control of the DID may change over time. For URIs with a handle in the authority, the handle-to-DID mapping can also change.
 
-The authority of a `zu://` URI stands for the individual, not for a network location. Software looks for an individual's records at the domains of the handles that the individual's DID claims (see [Map](map.md)): it resolves the DID document, reads the claimed handles, and asks the hosts at those domains. A handle written in a URI is only used to look up the DID; the DID may claim other handles, and so have records at other domains. How software asks a host for records is not specified yet.
+The authority of a `zu://` URI stands for the individual, not for a network location. Software looks for an individual's records at the domains of the handles that the individual's DID claims (see [Map](map.md)): it resolves the DID document, reads the claimed handles, and asks the hosts at those domains. A handle written in a URI is only used to look up the DID; the DID may claim other handles, and so have records at other domains. How software asks a host for records is specified in [Queries](query.md).
 
 ## Handle-based URIs
 

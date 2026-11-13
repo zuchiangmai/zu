@@ -6,7 +6,7 @@ Content in Zu, both DRISL blocks and blobs, is linked by CID (see [Data Model](d
 
 A link is self-certifying: whatever is returned can be checked against the hash in the link. Content can therefore be fetched from anyone, including an untrusted host, and still be trusted once it is checked.
 
-This document covers the `rasl` URL, fetching over HTTPS, checking what was fetched, and serving content. How content that is not public is fetched, and how data is moved in bulk, are left to other documents.
+This document covers the `rasl` URL, fetching over HTTPS, checking what was fetched, and serving content. How a file is given to a host and how long the host keeps it is specified in [Blobs](blob.md), and how software asks a host for records in [Queries](query.md). How content that is not public is fetched, and how data is moved in bulk, are left to other documents.
 
 ## RASL in Brief
 
