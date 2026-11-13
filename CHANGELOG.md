@@ -7,6 +7,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 Added:
 
 - [README](README.md) and [Path](specs/path.md): two directions are stated, without a format. Everything is a plugin: the data is an event log, so an application is derived data, one view among others, and different applications can be created freely while the data is more durable. And for the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs.
+- [README](README.md): a direction is stated for how data is synchronized, without a format. It is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges. Which form of RBSR, what is reconciled, and the format are not designed yet.
 
 Changed:
 
