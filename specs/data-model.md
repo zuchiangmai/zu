@@ -18,7 +18,18 @@ This document covers the data types, blob references, the JSON representation an
 
 ## Relationship With DASL and IPLD
 
-The Zu data model aligns with [DASL](https://dasl.ing/), a set of specifications for hash-linked data. DASL libraries and tooling can be used to implement Zu. DASL is itself a subset of [InterPlanetary Linked Data (IPLD)](https://ipld.io/docs/data-model/).
+[DASL](https://dasl.ing/) is the set of specifications Zu follows for hash-linked data. Where DASL specifies something Zu needs, Zu uses it rather than defining its own. DASL libraries and tooling can be used to implement Zu.
+
+The parts of DASL Zu uses:
+
+| Part | Used for |
+|---|---|
+| [CID](https://dasl.ing/cid.html) | Links, in the formats below |
+| [DRISL](https://dasl.ing/drisl.html) | Encoding data that is signed or hashed |
+| [RASL](https://dasl.ing/rasl.html) | Fetching content by its CID (see [Retrieval](retrieval.md)) |
+| [CAR](https://dasl.ing/car.html) | Moving or exporting data in bulk, when that is specified |
+
+DASL CIDs are a strict subset of IPFS CIDs: one hash function, one string encoding, two codecs, and no chunking, so a file has one CID, which carries the hash of the whole file. DASL is itself a subset of [InterPlanetary Linked Data (IPLD)](https://ipld.io/docs/data-model/).
 
 IPLD specifies a normalized JSON encoding called **DAG-JSON**, but Zu uses different conventions when writing JSON (see below). The JSON encoding is not byte-deterministic; the DRISL representation is the one used whenever data is signed or hashed.
 
@@ -147,4 +158,4 @@ More hash types are likely to be added to the blessed set of CIDs. [BDASL](https
 
 Questions still open in this draft:
 
-- Which documents use DASL [CAR](https://dasl.ing/car.html) archives to move or export data in bulk.
+- Which document specifies moving or exporting data in bulk. The archive format for it is DASL [CAR](https://dasl.ing/car.html).

@@ -4,6 +4,10 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 ## Unreleased
 
+Changed:
+
+- [Data Model](specs/data-model.md): DASL is stated as the set of specifications Zu follows for hash-linked data, with a table of the parts it uses — CID for links, DRISL for data that is signed or hashed, RASL for fetching content, and CAR for moving data in bulk once that is specified. Where DASL specifies something Zu needs, Zu uses it rather than defining its own. The open question on CAR archives is now only which document specifies bulk movement.
+
 Added:
 
 - [Key Handover](specs/handover.md): the messages and steps by which a Zu signing key is handed to another page. The receiving page finds the handover page at `/.well-known/zu-handover` of the handle's domain. On the same device the two pages exchange a request and the key with `postMessage`, and the handover page takes the receiving origin from the browser. Between devices the receiving page shows a code with a room URL and a one-time P-256 public key; the handover page seals the key with ECDH, HKDF-SHA-256 and AES-256-GCM and posts it to the room, which the receiving origin's host relays once, within 5 minutes, without being able to read it. The open question in [DIDs](specs/did.md) on how the pages find each other and what they exchange is dropped.
