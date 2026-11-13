@@ -212,6 +212,8 @@ The handle syntax is relatively stable.
 
 It is conceivable that `.onion` handles would be allowed at some point in the future.
 
+The domains of a DID's handles are where software looks for the DID's data (see [Paths](path.md)). A handle whose domain runs no host, for example one confirmed only by a DNS TXT record, gives no place to look. A `service` entry may be added later for that case.
+
 Questions still open in this draft:
 
 - Whether a domain's confirmation should be signed with the city's `did:zu` key, so that a past result can be checked again after the city is gone, as in DIF's [Well-Known DID Configuration](https://identity.foundation/well-known-did-configuration/resources/did-configuration).

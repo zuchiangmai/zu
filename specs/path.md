@@ -22,7 +22,7 @@ A path is written as a `zu://` URI, for example:
 zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self
 ```
 
-This document covers the path, the `zu://` URI syntax and the key syntax. How an individual's records are grouped and signed, which kinds of keys a type uses, which record a key refers to when it has been written more than once, and where an individual's records are stored, are left to other documents.
+This document covers the path, the `zu://` URI syntax and the key syntax. How an individual's records are grouped and signed, which kinds of keys a type uses, and which record a key refers to when it has been written more than once, are left to other documents.
 
 ## `zu://` URI Structure
 
@@ -38,7 +38,7 @@ A `zu://` URI with a handle as its authority and no path is the form in which a 
 
 A path is not a *strong* reference, in that it is not content-addressed. The record at a path may change or be removed over time, or the DID itself may be deleted or unavailable. For `did:web`, control of the DID may change over time. For URIs with a handle in the authority, the handle-to-DID mapping can also change.
 
-The authority of a `zu://` URI does not indicate a network location. Even when a handle is in the authority, the hostname is only used to look up the DID, and is often not the host that stores the individual's records.
+The authority of a `zu://` URI stands for the individual, not for a network location. Software looks for an individual's records at the domains of the handles that the individual's DID claims (see [Map](map.md)): it resolves the DID document, reads the claimed handles, and asks the hosts at those domains. A handle written in a URI is only used to look up the DID; the DID may claim other handles, and so have records at other domains. How software asks a host for records is not specified yet.
 
 ## Handle-based URIs
 
@@ -185,4 +185,3 @@ Questions still open in this draft:
 - Which kinds of keys a type uses. atproto names four kinds: `tid`, `nsid`, `literal:<value>` and `any`.
 - Which record a path refers to when the same key has been written more than once.
 - How an individual's records are grouped and signed, so that a record found at a path can be checked against the individual's signing key.
-- Where an individual's records are stored, and how software finds that host from the DID.
