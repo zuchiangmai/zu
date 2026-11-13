@@ -17,7 +17,7 @@ Being designed now, not specified yet:
 Direction set, not specified yet:
 
 - Everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. Different applications can then be created freely, while the data is more durable (see [Path](specs/path.md#possible-future-changes)).
-- For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. The format is not designed yet.
+- For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](specs/record.md) lets a record list the earlier records it follows; which data is organized this way is not specified yet.
 
 Not specified yet, to be designed within v0.3:
 
@@ -41,6 +41,8 @@ Not specified yet, to be designed later:
 | nsid | Names of record types, a reversed domain followed by a name, such as `com.example.note` | [`specs/nsid.md`](specs/nsid.md) (draft) |
 | path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
 | retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
+| cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
+| record | The signed record: a signed header and a body linked by CID, links to earlier records, time, and which record a path refers to | [`specs/record.md`](specs/record.md) (draft) |
 
 The other modules of v0.3 have not been designed yet.
 

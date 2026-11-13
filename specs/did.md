@@ -153,7 +153,7 @@ For example, two Zu signing keys in a `did:zu` document:
 ]
 ```
 
-Zu does not yet have a cryptography specification of its own.
+How data is signed with a Zu signing key, and how signatures are verified, is specified in [Cryptography](cryptography.md).
 
 ## Signing In to Another City
 
@@ -219,7 +219,6 @@ A city's keys are held by its host for now. Control of a city's keys by several 
 
 Questions still open in this draft:
 
-- Whether signing keys of other types (P-256, `secp256k1`) are also accepted.
 - Which `service` entries hosts' DID documents carry, and whether people's carry any. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
 - How a city's DID document is marked, to be specified in a separate document.
 - How a host's DID document is marked.
