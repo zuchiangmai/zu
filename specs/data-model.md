@@ -14,7 +14,7 @@ A link does not say where on the network its content can be found; how content i
 
 Links are written as [Content Identifiers](https://dasl.ing/cid.html) (CIDs), which have a binary and a string form. A CID carries a code that says whether it points to a node (DRISL) or to raw bytes. The CIDs allowed in Zu are listed below.
 
-This document covers the data types, blob references, the JSON representation and the CID formats. Record types are named by [NSIDs](nsid.md), records are addressed by [paths](path.md), and content is fetched by CID as described in [Retrieval](retrieval.md). How records are grouped into an individual's data, how data is moved between servers, and how data is packed into archives are left to other documents.
+This document covers the data types, blob references, the JSON representation and the CID formats. Record types are named by [NSIDs](nsid.md), records are addressed by [paths](path.md) and signed as described in [Records](record.md), and content is fetched by CID as described in [Retrieval](retrieval.md). How data is moved between servers, and how data is packed into archives, are left to other documents.
 
 ## Relationship With DASL and IPLD
 
@@ -44,7 +44,7 @@ To stay compatible with the default number type of JavaScript, integers should b
 
 Data can be checked against the data model without knowing what kind of record it is. For example, a JSON object containing a `$bytes` object whose value is a boolean instead of a base64 string is valid JSON, but never valid in the Zu data model.
 
-Field names starting with `$` are reserved for the data model and the protocol, in both JSON and CBOR. Examples are `$bytes` and `$link` (used in JSON) and `$type` (used by blob references). Implementations should ignore `$` fields they do not know, so that the protocol can evolve. Applications should not use or invent `$` fields of their own.
+Field names starting with `$` are reserved for the data model and the protocol, in both JSON and CBOR. Examples are `$bytes` and `$link` (used in JSON) and `$type` (used by blob references and by signed data, see [Cryptography](cryptography.md)). Implementations should ignore `$` fields they do not know, so that the protocol can evolve. Applications should not use or invent `$` fields of their own.
 
 ### Nullable and False-y
 
@@ -147,5 +147,4 @@ More hash types are likely to be added to the blessed set of CIDs. [BDASL](https
 
 Questions still open in this draft:
 
-- Whether a record also states its type inside its own data, besides its path.
 - Which documents use DASL [CAR](https://dasl.ing/car.html) archives to move or export data in bulk.

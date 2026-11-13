@@ -8,7 +8,7 @@ Namespaced Identifiers (NSIDs) name the types of records in Zu. The type of a re
 
 The basic structure and semantics of an NSID are a fully-qualified hostname in reverse domain-name order, followed by an additional name segment. The hostname part is the **domain authority,** and the final segment is the **name**.
 
-This document covers NSID syntax. How the records of a type are defined and checked, and whether a record also states its type inside its own data, are left to other documents.
+This document covers NSID syntax. A record states its type in its signed header (see [Records](record.md)). How the records of a type are defined and checked is left to another document.
 
 ## NSID Syntax
 
@@ -96,4 +96,3 @@ The "glob" syntax variation may be modified to make the distinction between sing
 Questions still open in this draft:
 
 - How the records of a type are defined and checked. Zu has no schema language.
-- Whether a record also states its NSID inside its own data, besides its path.
