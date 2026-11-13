@@ -159,7 +159,7 @@ How data is signed with a Zu signing key, and how signatures are verified, is sp
 
 A person's private Zu signing keys are held in the web origins that use them, such as the site of city B where the person signed up. A page from another origin, such as the site of city A, cannot read them.
 
-A person signs in to city A by handing the Zu signing key held in city B's web origin over to city A's page. Afterwards both origins hold the same key, and city A's page signs with it by itself. No key is added to the DID for city A.
+A person signs in to city A by handing the Zu signing key held in city B's web origin over to city A's page. Afterwards both origins hold the same key, and city A's page signs with it by itself. No key is added to the DID for city A. Where city A's host needs to know which DID a request comes from, city A's page proves it as described in [Request Authentication](auth.md).
 
 The same handover brings the key to another device: to the same city on another device, or to another city on another device.
 
