@@ -8,6 +8,12 @@ Added:
 
 - [README](README.md) and [Path](specs/path.md): two directions are stated, without a format. Everything is a plugin: the data is an event log, so an application is derived data, one view among others, and different applications can be created freely while the data is more durable. And for the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs.
 
+Changed:
+
+- [DIDs](specs/did.md): `did:webvh` is not accepted as a DID method. The open question on it is dropped. A `did:web` document that a `did:webvh` DID publishes in parallel is still accepted as `did:web`.
+- [DIDs](specs/did.md): a host may run several cities. Each city has a DID and keys of its own, not shared with any other city on the same host, and held for now by the host. Control of a city's keys by several signers is left to a future version.
+- [README](README.md): the Scope section now lists what is to be designed within v0.3 (how data is synchronized, how a request to a host is authenticated) and what is left for later (data that is not public; packing, exporting and moving an individual's data; control of a city's keys by several signers).
+
 ## v0.3.2 (2026-11-09)
 
 Added:
