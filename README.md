@@ -2,11 +2,11 @@
 
 Zu is the protocol behind polis, written down as specifications that other software can implement without reading the polis code.
 
-**Version:** this is Zu v0.3.4. The earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
+**Version:** this is Zu v0.3.5. The earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, and how records are named, addressed and fetched.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, defined by their types, asked for and fetched, how files are given to a host and kept, and how two parties find out which records each of them lacks.
 
 It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 

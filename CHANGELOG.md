@@ -2,7 +2,7 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
-## Unreleased
+## v0.3.5 (2026-11-14)
 
 Added:
 
@@ -17,7 +17,9 @@ Changed:
 - [Records](specs/record.md) states that whether a body follows the definition of its type is a separate check, which does not change whether a record is valid or which record a path refers to.
 - [Records](specs/record.md): a host does not discard the header of a record because the record has been replaced or removed. When a record is removed, a host discards the bodies of the records that the removing record follows at that path, and the files those bodies referred to, and no longer serves them; a body or a file that a current record refers to is kept. The body of a record that has been replaced but not removed may be discarded, and whether a host keeps it is a new open question. Before, software could keep or discard earlier records as it chose.
 - [Data Model](specs/data-model.md) lists the values of a union among the uses of `$type`.
-- [README](README.md) lists Synchronization among the modules. What remains to be designed for it within v0.3 is the encoding of the messages, how a record is delivered to a host, and how software learns of new records as they arrive.
+- [README](README.md) lists Types, Queries, Blobs and Synchronization among the modules, and its Scope section names what v0.3 now specifies: how records are signed, named, addressed, defined by their types, asked for and fetched, how files are given to a host and kept, and how two parties find out which records each of them lacks. What remains to be designed for synchronization within v0.3 is the encoding of the messages, how a record is delivered to a host, and how software learns of new records as they arrive.
+
+Still open, listed under Possible Future Changes in each specification: what was carried over from v0.3.4 and is not answered above, and, new in this version, which DID holds the definitions of the protocol's own types, whether a definition may describe a type under another domain, whether a definition record also states its NSID in its body, whether a query can ask for the records that list a given record in `prev`, whether the sets that synchronization compares are exactly the filters of a query, how long a host keeps a blob that no current record refers to, whether a host states its limits before an upload, whether a host keeps the body of a record that has been replaced but not removed, and, for synchronization, how records with the same `at` are ordered, what stands for a record in a comparison, whether a set can be narrowed by key, how a range is split, how a record is delivered to a host, and how software learns of new records as they arrive.
 
 ## v0.3.4 (2026-11-13)
 
