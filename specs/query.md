@@ -25,7 +25,7 @@ All parameters are optional:
 | Parameter | Selects records |
 |---|---|
 | `by` | whose header `by` is this DID |
-| `type` | whose header `type` is this NSID, or matches it when it ends in `.*` (see [NSIDs](nsid.md)) |
+| `type` | whose header `type` is this type, or any type of one class when it is written with a star, as in `ev/*` (see [Paths](path.md)) |
 | `key` | whose header `key` is this key |
 | `since` | whose header `at` is this time or later, in milliseconds |
 | `until` | whose header `at` is earlier than this time, in milliseconds |
@@ -66,7 +66,7 @@ A host answers a query it cannot parse with status 400.
 
 A host answers from the records it holds. It answers the same for a given filter however it has arranged those records: indexes are the host's own matter and are not specified here.
 
-A host holds the headers of the records it answers for, and so can tell which records are replaced. It does not need the definition of a type to answer for it (see [Types](type.md)).
+A host holds the headers of the records it answers for, and so can tell which records are replaced. It does not need to know what the body of a type holds to answer for it.
 
 A host may limit `n`, and may refuse a query whose filter would have it read more than it is willing to, with status 400. A query that gives neither `by` nor `type` is one a host may refuse.
 

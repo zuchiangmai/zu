@@ -55,8 +55,6 @@ A blob counts against the individual whose records refer to it. How a host count
 
 The blob reference states the `size` of the blob. A host should stop reading an upload that grows past it.
 
-A type may narrow what a blob field accepts, by media type and by size (see [Types](type.md)).
-
 ## Usage and Implementation Guidelines
 
 Deliver the record first, then upload the blobs it refers to. A host keeps a record whose blobs it does not hold yet; a blob can be uploaded, or fetched from another host, afterwards.

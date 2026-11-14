@@ -11,7 +11,7 @@ This document covers the set of records two parties compare, the order of the re
 Two parties, such as a device and a host, or two hosts, first agree on the set of records they compare. A set is named by what record headers state, in the way a [query](query.md) names it:
 
 - by `by`: the records of one individual, or of every individual the party holds records for;
-- by `type`: the records of one type, or of every type under one domain authority.
+- by `type`: the records of one type, or of every type of one class.
 
 Each party takes the records it holds that match. That includes records that have been replaced or removed: every header is kept (see [Records](record.md)), and a removal is a record, so it reaches the other party like any other.
 

@@ -13,7 +13,7 @@ A record is made of two parts:
 
 The header is what is signed. The body is tied to it by its CID. A record can therefore be checked with its header alone, and stays checkable when its body is fetched later, held back or discarded.
 
-This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How the body of a type is defined is specified in [Types](type.md), and how software asks a host for records in [Queries](query.md). How two parties find out which records each of them lacks is specified in [Synchronization](sync.md). How records that are not public are handled is left to another document.
+This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How software asks a host for records is specified in [Queries](query.md), and how two parties find out which records each of them lacks in [Synchronization](sync.md). How the body of a type is defined, and how records that are not public are handled, are left to later documents.
 
 ## Header
 
@@ -22,7 +22,7 @@ A header is a map in the [Data Model](data-model.md) with these fields, all of t
 - `$type` (string): the fixed value `record`.
 - `v` (integer): the fixed value `1`.
 - `by` (string): the DID of the individual the record belongs to (see [DIDs](did.md)).
-- `type` (string): the type of the record, an [NSID](nsid.md). What the body of that type holds is stated in its definition (see [Types](type.md)).
+- `type` (string): the type of the record, written as a class and a kind, such as `ev/event` (see [Paths](path.md)).
 - `key` (string): the key of the record (see [Paths](path.md)).
 - `at` (integer): when the record was signed, in milliseconds since 1970-01-01T00:00:00Z, as reported by the signer (see Time).
 - `prev` (list of links): the CIDs of the earlier records that this record follows (see Earlier Records). The list may be empty. It has no duplicates, and is sorted by the binary form of the CIDs in ascending byte order.
@@ -43,7 +43,7 @@ In JSON, a header looks like this:
   "$type": "record",
   "v": 1,
   "by": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
-  "type": "com.example.note",
+  "type": "ev/event",
   "key": "self",
   "at": 1794528000000,
   "prev": [
@@ -57,7 +57,7 @@ In JSON, a header looks like this:
 
 ## Body
 
-The body of a record is a map in the Data Model, encoded in DRISL as a block of its own. Its fields are those that the record's type defines. A body refers to files with blob references (see [Blobs](blob.md)).
+The body of a record is a map in the Data Model, encoded in DRISL as a block of its own. Its fields are those the record's type calls for. How a type states them is not specified in this version. A body refers to files with blob references (see [Blobs](blob.md)).
 
 The body does not state the record's path or type. The type is stated once, in the header.
 
@@ -76,7 +76,7 @@ To sign a record:
 A record is valid only if all of the following hold:
 
 - the header is a DRISL map with every required field, each of the right type; `$type` is `record` and `v` is `1`
-- `by` is a syntactically valid DID of a method Zu accepts, `type` is a valid NSID, and `key` is a valid key
+- `by` is a syntactically valid DID of a method Zu accepts, `type` is a valid type and `key` is a valid key (see [Paths](path.md))
 - `prev` has no duplicates and is sorted
 - the signature in `sig` is valid for the header without `sig`, under the public key in `pub`, by the rules in [Cryptography](cryptography.md)
 - `pub` is a Zu signing key of `by` (see Keys and the DID Document)
@@ -84,7 +84,7 @@ A record is valid only if all of the following hold:
 
 Software must not treat a record as the individual's until these checks have passed. A record that passes them can be trusted no matter who supplied it.
 
-Whether the body follows the definition of the record's type is a separate check (see [Types](type.md)). It does not change whether a record is valid, or which record a path refers to.
+Whether software checks a body against what it expects of the record's type, when it does so, and what it does with a body it does not expect, is left to the software. It does not change whether a record is valid, or which record a path refers to.
 
 ### Keys and the DID Document
 
@@ -187,6 +187,8 @@ Parsing untrusted headers and bodies carries the risks described in the [Data Mo
 ## Possible Future Changes
 
 Bodies may be encrypted, with the header left readable so that records can still be exchanged.
+
+A later version will specify how the body of a type is defined.
 
 Hosts, or other cities, may attest to when they first saw a record, which would give a time that does not depend on the signer.
 

@@ -6,7 +6,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, defined by their types, asked for and fetched, how files are given to a host and kept, and how two parties find out which records each of them lacks.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for and fetched, how files are given to a host and kept, and how two parties find out which records each of them lacks.
 
 It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
@@ -26,6 +26,7 @@ Not specified yet, to be designed within v0.3:
 Not specified yet, to be designed later:
 
 - Data that is not public.
+- How the body of a type is defined, and how classes are kept apart when the same name is chosen twice. For now a type is written as a class and a kind (see [Paths](specs/path.md)).
 - Packing, exporting and moving an individual's data.
 - Control of a city's keys by several signers. For now the host that runs a city holds its keys (see [DIDs](specs/did.md)).
 - Peer-to-peer connections between people of different cities. The specifications leave room for a host to run an [iroh](https://www.iroh.computer) relay for such connections: a DID document may later carry a service entry for it (see [DIDs](specs/did.md)), and content may later be fetched over such connections besides HTTPS (see [Retrieval](specs/retrieval.md)).
@@ -37,9 +38,7 @@ Not specified yet, to be designed later:
 | did | The DID methods Zu accepts, `did:zu` and `did:web`; what Zu reads from a DID document, including its Zu signing keys; and how a person signs in to another city | [`specs/did.md`](specs/did.md) (draft). The `did:zu` method itself: [`specs/did-zu.md`](specs/did-zu.md), the authoritative copy; reference implementation [4seas-community/did-method-zu](https://github.com/4seas-community/did-method-zu); directory `https://plc.zuzalu.ink` |
 | map | Handles such as `alice.4seas.example`: how a DID claims them, how a domain confirms them, and how software resolves them | [`specs/map.md`](specs/map.md) (draft) |
 | data model | How records and messages are encoded, hashed and linked: DRISL, DASL CIDs, blob references | [`specs/data-model.md`](specs/data-model.md) (draft) |
-| nsid | Names of record types, a reversed domain followed by a name, such as `com.example.note` | [`specs/nsid.md`](specs/nsid.md) (draft) |
-| type | Defining a type of record: what its body holds, which keys it uses, and where its definition lives | [`specs/type.md`](specs/type.md) (draft) |
-| path | A record's address, individual > type > key, written as a `zu://` URI | [`specs/path.md`](specs/path.md) (draft) |
+| path | A record's address, individual > type > key, written as a `zu://` URI; how a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md) (draft) |
 | retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
 | query | Asking a host for records: one record, an individual's records of a type, or a type across everyone the host holds records for | [`specs/query.md`](specs/query.md) (draft) |
 | blob | Files: how a file is given to a host, how long the host keeps it, and whom it counts against | [`specs/blob.md`](specs/blob.md) (draft) |

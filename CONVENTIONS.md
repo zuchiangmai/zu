@@ -43,7 +43,7 @@ Fields defined by another standard keep the names that standard gives them, even
 
 Names beginning with `$` are reserved for the data model and the protocol (see [Data Model](specs/data-model.md)).
 
-The name segment of an NSID is a short lowercase word, such as `note` or `event` (see [NSIDs](specs/nsid.md)).
+The two segments of a type are short lowercase words, such as `ev/event` (see [Paths](specs/path.md)).
 
 ## Versions
 

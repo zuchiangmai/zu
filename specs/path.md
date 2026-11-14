@@ -11,7 +11,7 @@ individual > type > key
 ```
 
 - The **individual** is the DID the record belongs to (see [DIDs](did.md)). People, cities and hosts are all individuals. A city's public server keeps its data under its own DID, in the same way as a person.
-- The **type** is an [NSID](nsid.md), such as `com.example.note`.
+- The **type** names what sort of record it is. It is written as a class and a kind, such as `ev/event` (see Type Syntax below).
 - The **key** names one record among the individual's records of that type.
 
 The communities a record belongs to, and the application that wrote it, are not part of its path.
@@ -19,10 +19,10 @@ The communities a record belongs to, and the application that wrote it, are not 
 A path is written as a `zu://` URI, for example:
 
 ```
-zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/ev/event/self
 ```
 
-This document covers the path, the `zu://` URI syntax and the key syntax. How a record is signed, and which record a path refers to when it has been written more than once, are specified in [Records](record.md). Which keys a type uses is stated in its definition (see [Types](type.md)).
+This document covers the path, the `zu://` URI syntax, the type syntax and the key syntax. How a record is signed, and which record a path refers to when it has been written more than once, are specified in [Records](record.md).
 
 ## `zu://` URI Structure
 
@@ -32,7 +32,7 @@ The structure of a `zu://` URI is:
 "zu://" AUTHORITY [ "/" TYPE [ "/" KEY ] ]
 ```
 
-The **authority** is required, and should be normalized. It is either a DID or a handle (see [Map](map.md)), and stands for the individual. It is syntactically valid to have `zu://` URIs with DID methods that Zu does not accept, though the URI will not resolve or function properly. The optional **type** must be a normalized [NSID](nsid.md). The optional **key** must be a valid key (see Key Syntax below). A URI with a key must also have a type.
+The **authority** is required, and should be normalized. It is either a DID or a handle (see [Map](map.md)), and stands for the individual. It is syntactically valid to have `zu://` URIs with DID methods that Zu does not accept, though the URI will not resolve or function properly. The optional **type** must be a valid type (see Type Syntax below). The optional **key** must be a valid key (see Key Syntax below). A URI with a key must also have a type.
 
 A `zu://` URI with a handle as its authority and no path is the form in which a DID claims a handle in its `alsoKnownAs` (see [Map](map.md)).
 
@@ -44,8 +44,8 @@ The authority of a `zu://` URI stands for the individual, not for a network loca
 
 These two URIs refer to the same record, if the handle belongs to the DID:
 
-- `zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self`
-- `zu://alice.4seas.example/com.example.note/self`
+- `zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/ev/event/self`
+- `zu://alice.4seas.example/ev/event/self`
 
 URIs referencing handles are not durable. If the individual changes their handle, any URI using that handle will become invalid, and could point to a record of another individual if the handle is reused.
 
@@ -71,7 +71,7 @@ Un-encoded colon characters in DIDs in the authority part of the URI are disallo
 - Hex-encoding of characters is permitted (but in practice not necessary and should be avoided to keep the URI normalized and human-readable)
 - The URI scheme is `zu`, and an authority part preceded with double slashes is always required. `zu://` URIs always start with `zu://`.
 - The authority must be non-empty, and is either a handle or a DID. Colons and unreserved characters should not be escaped in DIDs, but other reserved characters (including `#`, `/`, `$`, `&`, `@`) must be escaped. None of the DID methods Zu accepts allow these characters in DID identifiers.
-- The path is either empty, a type, or a type and a key, separated by a single slash (`/`). Trailing slashes are not allowed, including a trailing slash after the authority with no other path.
+- The path is either empty, a type, or a type and a key, separated by a single slash (`/`). A type is itself two segments separated by a slash, so a path has no segments, two, or three. Trailing slashes are not allowed, including a trailing slash after the authority with no other path.
 
 ## Normalization
 
@@ -84,8 +84,31 @@ Particularly when included in records, strict normalization should be followed t
 - Authority as DID: in normalized form, and no duplicate hex-encoding. For example, if the DID is already hex-encoded, don't re-encode the percent signs.
 - No trailing slashes in path part
 - No duplicate slashes or "dot" sections in path part (`/./` or `/abc/../` for example)
-- Type: domain authority part lowercased
+- Type: lowercase
 - Key is case-sensitive and not normalized
+
+## Type Syntax
+
+A type is written as two segments separated by a single slash (`/`), a class and a kind:
+
+```
+ev/event
+```
+
+- The **class** segment names a group of related sorts of records, such as `ev` for those about events. It has at least 1 and at most 32 characters; the allowed characters are lowercase ASCII letters (`a-z`), digits (`0-9`) and hyphens (`-`); the first character is a letter.
+- The **kind** segment names one sort of record in that class. It has at least 1 and at most 32 characters; the allowed characters are lowercase ASCII letters, digits and hyphens.
+
+A reference regex for a type is:
+
+```
+/^[a-z][a-z0-9-]{0,31}\/[a-z0-9-]{1,32}$/
+```
+
+A class is not an application. A type does not say which software wrote a record: any software may read and write records of any type, and one application may write records of several classes.
+
+When referring to every type of one class, the kind may be written as an ASCII star (`*`), as in `ev/*`.
+
+How classes are kept apart when the same name is chosen twice, and how the body of a type is defined, are not specified in this version (see Possible Future Changes).
 
 ## Key Syntax
 
@@ -106,10 +129,10 @@ Valid `zu://` URIs:
 
 ```
 zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz
-zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note
-zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self
-zu://did:web:pol.4seas.example/com.example.forum.post/3jui7kd54zh2y
-zu://alice.4seas.example/com.example.note/self
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/ev/event
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/ev/event/self
+zu://did:web:pol.4seas.example/forum/post/3jui7kd54zh2y
+zu://alice.4seas.example/ev/event/self
 ```
 
 Invalid `zu://` URIs:
@@ -118,8 +141,9 @@ Invalid `zu://` URIs:
 zu://alice.4seas.example/                    // trailing slash
 zu://user:pass@alice.4seas.example           // userinfo not supported
 zu://alice.4seas.example:3000                // not a valid DID or handle
-zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/note/1  // type is not a valid NSID
-zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/com.example.note/self?x=1  // query not supported
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/event  // a type has two segments
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/Ev/event/self  // type is not lowercase
+zu://did:zu:ewvi7nxzyoun6zhxrhs64oiz/ev/event/self?x=1  // query not supported
 ```
 
 Valid keys:
@@ -174,8 +198,10 @@ A path names an individual and a type. Publishing a path publishes that the indi
 
 The maximum length constraint may change.
 
+How classes are kept apart when the same name is chosen twice, and how the body of a type is defined, will be designed later. The way a type is written may change with that design.
+
 Query and fragment parts, and relative references between records of the same individual (for example `../<type>/<key>`), may be supported.
 
 The constraints on key syntax may be relaxed in the future to allow non-ASCII Unicode characters. Keys will always be valid Unicode, never relaxed to allow arbitrary byte-strings. The `%` character is reserved for possible use with URL encoding, but such encoding is not currently supported.
 
-Direction for a later version: everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. A path names an individual, a type and a key, and no application. Different applications can then be created freely over the same records, while the data is more durable. For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](record.md) lets a record list the earlier records it follows, which is a first step in this direction. Which data is organized as causal logs is not specified yet.
+Direction for a later version: everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. A path names an individual, a type and a key, and not the application that wrote the record. Different applications can then be created freely over the same records, while the data is more durable. For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](record.md) lets a record list the earlier records it follows, which is a first step in this direction. Which data is organized as causal logs is not specified yet.
