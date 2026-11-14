@@ -41,7 +41,7 @@ A host keeps a blob for as long as a record gives it a reason to:
 
 - A blob that no record refers to yet is kept for at least one hour after it was uploaded, so that the software has time to sign and deliver the record that refers to it.
 - A blob is kept while a record the host holds refers to it and is the record its path refers to (see [Records](record.md)).
-- When no such record remains, because the records that referred to the blob were replaced or removed, the host may discard the blob.
+- When no such record remains, the host may discard the blob. When the records that referred to it have been removed, the host discards it, as it discards their bodies (see [Records](record.md)).
 
 A host finds the blob references in a body by their shape, at any depth, without knowing the record's type (see [Data Model](data-model.md)).
 

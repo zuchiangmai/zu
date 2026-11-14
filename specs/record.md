@@ -128,7 +128,11 @@ A path may be written more than once.
 - To **update** a record, sign a new record with the same `by`, `type` and `key` and the new body. Its `prev` contains the CID of every record of that path that is current, as far as the signer knows (see Which Record a Path Refers To).
 - To **remove** a record, do the same with `body` set to `null`.
 
-The earlier records remain valid signed records. Software may keep or discard them, and may discard the body of a record that has been replaced or removed while keeping its header.
+The earlier records remain valid signed records. A host does not discard the header of a record because the record has been replaced or removed.
+
+When a record is removed, a host discards the body of every record that the removing record follows at that path, and no longer serves it. The files those bodies referred to are discarded with them (see [Blobs](blob.md)). A body or a file that a current record refers to is kept. Because the removing record is kept, a host that is handed one of those bodies again does not keep it.
+
+A host may discard the body of a record that has been replaced but not removed.
 
 ## Which Record a Path Refers To
 
@@ -193,3 +197,4 @@ Questions still open in this draft:
 - Whether a record can state which cities it is meant for, so that a record signed in one city does not count in another.
 - Whether records are numbered for each signing key, so that a missing record can be noticed.
 - What the limits on the size of a header and on the number of entries in `prev` are.
+- Whether a host keeps the body of a record that has been replaced but not removed.
