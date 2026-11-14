@@ -16,6 +16,7 @@ Changed:
 - [Records](specs/record.md) states that whether a body follows the definition of its type is a separate check, which does not change whether a record is valid or which record a path refers to.
 - [Records](specs/record.md): a host does not discard the header of a record because the record has been replaced or removed. When a record is removed, a host discards the bodies of the records that the removing record follows at that path, and the files those bodies referred to, and no longer serves them; a body or a file that a current record refers to is kept. The body of a record that has been replaced but not removed may be discarded, and whether a host keeps it is a new open question. Before, software could keep or discard earlier records as it chose.
 - [Data Model](specs/data-model.md) lists the values of a union among the uses of `$type`.
+- [README](README.md): the direction for synchronization now states its form, following Willow's region-based set reconciliation: the two parties first agree on a set of records, within the set the records are ordered by time, and a range is split by the number of records in it. What stands for a record in the comparison, and the format, remain open.
 
 ## v0.3.4 (2026-11-13)
 
