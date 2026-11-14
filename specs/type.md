@@ -43,7 +43,7 @@ For example, the definition of `com.example.note`, written as a record at `zu://
 }
 ```
 
-The body of a record of this type is checked against the `body` of its definition.
+The `body` of a definition describes the body of a record of this type.
 
 ## Field Types
 
@@ -81,7 +81,7 @@ A `ref` names a shape in one of three ways:
 - `<NSID>#name`: the entry `name` in the `defs` of the definition of that NSID;
 - `<NSID>`: the `body` of the definition of that NSID.
 
-A `union` holds a value that follows one of the shapes named in `refs`. The value is a map, and it states which shape it follows in a `$type` field, whose value is that entry of `refs` written in full, with the NSID in front of `#name`. A value that is not a map, or has no `$type`, fails the check. A value whose `$type` is not among `refs` is kept and not checked, like a field that is not described, so that a definition can come to allow more shapes.
+A `union` holds a value that follows one of the shapes named in `refs`. The value is a map, and it states which shape it follows in a `$type` field, whose value is that entry of `refs` written in full, with the NSID in front of `#name`. A value that is not a map, or has no `$type`, does not follow the definition. A value whose `$type` is not among `refs` is kept as it is, like a field that is not described, so that a definition can come to allow more shapes.
 
 ## String Formats
 
@@ -107,7 +107,7 @@ There is no format for a time. A time in a body is an `integer`, in milliseconds
 - `self`: the key is the string `self`. An individual has at most one record of this type.
 - `any`: the writer chooses the key, within the key syntax of [Paths](path.md).
 
-A record whose key is not one that its type's `key` allows fails the check (see Checking a Record).
+A record whose key is not one that its type's `key` allows does not follow the definition (see Checking a Record).
 
 ## Finding a Definition
 
@@ -122,21 +122,13 @@ A definition that cannot be found is not an error. Software that wanted to check
 
 ## Checking a Record
 
-Software checks a record against the definition of its type in one of three ways:
+A record follows the definition of its type when its key is one that the definition's `key` allows; its body is a map valid under the data model; every name in `req` is present; and every field that `fields` describes holds a value of the type it describes, within its constraints. Fields that `fields` does not describe are kept as they are. A record whose `body` is `null` removes the record at its path and has no body to check.
 
-- **check**: the record must be checked against its definition. If the definition cannot be found, the record is refused.
-- **do not check**: the record is not checked against any definition, even one that is known.
-- **check if known** (the default): the record is checked when the definition is known or can be fetched, and accepted when it cannot.
-
-A host that stores records for people uses **check if known**, so that a type nobody has heard of still works.
-
-Checking a record means: its key is one that the definition's `key` allows; its body is a map valid under the data model; every name in `req` is present; and every field that `fields` describes holds a value of the type it describes, within its constraints. Fields that `fields` does not describe are kept as they are. A record whose `body` is `null` removes the record at its path and has no body to check.
-
-A record that fails the check is not used: software does not repair it and does not use part of it, and a host may refuse to store it. It is still a validly signed record. Where software holds it, it replaces the records it follows like any other record (see [Records](record.md)), so that which record a path refers to does not depend on which definitions software knows.
+Whether software checks a record against its definition, when it does so, and what it does with a record that does not follow it, is left to the software. Whether a record follows its definition does not change whether the record is valid, or which record a path refers to (see [Records](record.md)).
 
 ## Changing a Definition
 
-A definition may change within bounds: a record that passed the check of the old definition must pass the check of the new one, and a record written for the new one must pass the check of the old one.
+A definition may change within bounds: a record that follows the old definition must follow the new one, and a record written for the new one must follow the old one.
 
 - a new field must be optional, that is, not in `req`;
 - a field is not removed from `fields` and not renamed; one no longer used is marked so in its `doc`;
@@ -164,11 +156,11 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 A definition says nothing about whether the data in a record is true. It constrains the shape, not the content.
 
-An NSID records which domain named a type (see [NSIDs](nsid.md)). Whoever holds that domain can change the definition, and can publish one that refuses records other software accepted. Software that has fetched a definition should keep working from it when the domain stops answering, rather than refusing records it accepted before.
+An NSID records which domain named a type (see [NSIDs](nsid.md)). Whoever holds that domain can change the definition, and can publish one that records written before no longer follow. Software that has fetched a definition should keep working from it when the domain stops answering.
 
 Fetching a definition tells the domain's host which type the fetching software is interested in, and resolving the handle tells the DNS resolvers and the directory the same.
 
-A record of an unknown type is stored and passed on unchecked. A host that accepts such records accepts whatever the data model allows, so the limits a host sets on size and nesting apply to them.
+A host stores records and passes them on without knowing their types. It accepts whatever the data model allows, so the limits a host sets on size and nesting apply.
 
 ## Possible Future Changes
 
