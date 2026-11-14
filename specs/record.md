@@ -13,7 +13,7 @@ A record is made of two parts:
 
 The header is what is signed. The body is tied to it by its CID. A record can therefore be checked with its header alone, and stays checkable when its body is fetched later, held back or discarded.
 
-This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How the body of a type is defined is specified in [Types](type.md), and how software asks a host for records in [Queries](query.md). How records are synchronized between devices and hosts, and how records that are not public are handled, are left to other documents.
+This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How the body of a type is defined is specified in [Types](type.md), and how software asks a host for records in [Queries](query.md). How two parties find out which records each of them lacks is specified in [Synchronization](sync.md). How records that are not public are handled is left to another document.
 
 ## Header
 

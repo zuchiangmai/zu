@@ -21,7 +21,7 @@ Direction set, not specified yet:
 
 Not specified yet, to be designed within v0.3:
 
-- How data is synchronized. The direction is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567)). The form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html): the two parties first agree on a set of records, such as the records of one individual or the records of one type; within the set the records are ordered by time; and a range is split by the number of records in it. What stands for a record in the comparison, and the format, are not designed yet.
+- The encoding of synchronization. [Synchronization](specs/sync.md) states the form: two parties first agree on a set of records, order it by time and then by path, compare fingerprints of ranges, and split a range whose fingerprints differ by the number of records in it, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567), and Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html)). How the messages are encoded, how a record is delivered to a host, and how software learns of new records as they arrive are not designed yet.
 
 Not specified yet, to be designed later:
 
@@ -47,6 +47,7 @@ Not specified yet, to be designed later:
 | handover | How a Zu signing key is handed from the page that holds it to another page, on the same device and between devices | [`specs/handover.md`](specs/handover.md) (draft) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |
 | record | The signed record: a signed header and a body linked by CID, links to earlier records, time, and which record a path refers to | [`specs/record.md`](specs/record.md) (draft) |
+| sync | How two parties find out which records each of them lacks: the set they compare, its order, and comparing by fingerprints | [`specs/sync.md`](specs/sync.md) (draft) |
 
 The other modules of v0.3 have not been designed yet.
 
