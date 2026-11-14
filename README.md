@@ -21,7 +21,7 @@ Direction set, not specified yet:
 
 Not specified yet, to be designed within v0.3:
 
-- How data is synchronized. The direction is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567)). Which form of RBSR, what is reconciled, and the format are not designed yet.
+- How data is synchronized. The direction is RBSR: two parties compare fingerprints of the records they hold in a range, and split a range whose fingerprints differ into smaller ranges, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567)). The form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html): the two parties first agree on a set of records, such as the records of one individual or the records of one type; within the set the records are ordered by time; and a range is split by the number of records in it. What stands for a record in the comparison, and the format, are not designed yet.
 
 Not specified yet, to be designed later:
 
