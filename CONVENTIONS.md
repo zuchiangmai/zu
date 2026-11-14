@@ -47,7 +47,7 @@ The name segment of an NSID is a short lowercase word, such as `note` or `event`
 
 ## Versions
 
-The protocol as a whole has one version, written as `major.minor.patch` and stated in the [README](README.md); it is now v0.3.4. Each version is marked by a git tag of the same name, such as `v0.3.1`, and what it changed from the version before is listed in [CHANGELOG.md](CHANGELOG.md). As in atproto, a single specification has no version number of its own: it is edited in place, and its git history is its record. A data format that may change incompatibly carries its own version inside the data, the way atproto's repository format states "version 3" and its event stream "v0". A change that is expected but not yet made is listed under Possible Future Changes first.
+The protocol as a whole has one version, written as `major.minor.patch` and stated in the [README](README.md); it is now v0.3.5. Each version is marked by a git tag of the same name, such as `v0.3.1`, and what it changed from the version before is listed in [CHANGELOG.md](CHANGELOG.md). As in atproto, a single specification has no version number of its own: it is edited in place, and its git history is its record. A data format that may change incompatibly carries its own version inside the data, the way atproto's repository format states "version 3" and its event stream "v0". A change that is expected but not yet made is listed under Possible Future Changes first.
 
 ## Test vectors
 
