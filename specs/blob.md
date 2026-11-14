@@ -2,26 +2,26 @@
 
 A specification for files: how a file is given to a host, how long the host keeps it, and whom it counts against.
 
-This document is not adapted from an AT Protocol specification, but it follows the life of a blob in atproto: a file is uploaded first, kept once a record refers to it, and discarded when no record does. The guidance on serving files safely is in [Retrieval](retrieval.md). It is a draft; the questions still open are listed under Possible Future Changes.
+This document is not adapted from an AT Protocol specification. As in atproto, a host keeps a file because a record refers to it. Unlike atproto, the record comes first: a host accepts a file only when it holds a record that refers to it. The guidance on serving files safely is in [Retrieval](retrieval.md). It is a draft; the questions still open are listed under Possible Future Changes.
 
 A **blob** is a file: a run of bytes, named by a CID with the `raw` codec (see [Data Model](data-model.md)). A blob has no path of its own. It belongs to an individual through a [record](record.md) of that individual whose body refers to it with a blob reference. Whose file it is, and what it is for, is whatever that record says.
 
-This document covers uploading a blob, when a host keeps one and when it may discard it, and limits. Fetching a blob is specified in [Retrieval](retrieval.md). Blobs that are not public are not specified yet.
+This document covers uploading a blob, when a host keeps one and when it discards it, and limits. Fetching a blob is specified in [Retrieval](retrieval.md). Blobs that are not public are not specified yet.
 
 ## Uploading
 
-Software gives a blob to a host with an HTTP `PUT` request:
+Software delivers a record, header and body, to a host first. It then gives the host each blob the record refers to, with an HTTP `PUT` request:
 
 ```
 PUT https://<host>/.well-known/zu-blob/<cid>
-Authorization: Zu <statement>
 Content-Type: application/octet-stream
 
 <the bytes of the file>
 ```
 
-- `<cid>` is the CID of the bytes, computed by the software before it uploads, in the format of the [Data Model](data-model.md) with the `raw` codec.
-- The `Authorization` header carries an authentication statement (see [Request Authentication](auth.md)). A blob is not signed, so the statement is how the host knows which DID uploads it.
+`<cid>` is the CID of the bytes, in the format of the [Data Model](data-model.md) with the `raw` codec. It is the `ref` of the blob reference in the record.
+
+A host accepts a blob only if a record it holds refers to it and is the record its path refers to (see [Records](record.md)). That record is signed, so the host knows whose file it is. The request itself carries no authentication: anyone who has the bytes may send them.
 
 The host computes the CID of the bytes it received. If it is not the CID in the URL, the host discards the bytes and answers with status 400.
 
@@ -31,15 +31,13 @@ Other answers:
 
 | Status | Meaning |
 |---|---|
-| 401 | the statement is missing or does not pass |
-| 403 | the host does not keep files for this DID |
+| 403 | no record the host holds refers to this blob |
 | 413 | the blob is larger than the host accepts, or the individual's allowance is used up |
 
 ## Keeping and Discarding
 
 A host keeps a blob for as long as a record gives it a reason to:
 
-- A blob that no record refers to yet is kept for at least one hour after it was uploaded, so that the software has time to sign and deliver the record that refers to it.
 - A blob is kept while a record the host holds refers to it and is the record its path refers to (see [Records](record.md)).
 - When no such record remains, the host may discard the blob. When the records that referred to it have been removed, the host discards it, as it discards their bodies (see [Records](record.md)).
 
@@ -53,13 +51,15 @@ A host need not serve a blob that no record refers to.
 
 A host may limit the size of a single blob and the total an individual may have. It is recommended to limit the total rather than each blob (see [Retrieval](retrieval.md)).
 
-A blob counts against the individual whose records refer to it, and before any record refers to it, against the DID that uploaded it. How a host counts a blob that the records of several individuals refer to is its own matter.
+A blob counts against the individual whose records refer to it. How a host counts a blob that the records of several individuals refer to is its own matter.
 
-A type may narrow what a blob field accepts, by media type and by size (see [Types](type.md)). A host that checks a record against its definition applies those bounds to the blob reference.
+The blob reference states the `size` of the blob. A host should stop reading an upload that grows past it.
+
+A type may narrow what a blob field accepts, by media type and by size (see [Types](type.md)).
 
 ## Usage and Implementation Guidelines
 
-Upload the blob first, then deliver the record that refers to it. A host that receives a record referring to a blob it does not hold can keep the record; the blob can be uploaded, or fetched from another host, afterwards.
+Deliver the record first, then upload the blobs it refers to. A host keeps a record whose blobs it does not hold yet; a blob can be uploaded, or fetched from another host, afterwards.
 
 The media type of a blob is the `mime` of the blob reference, written by whoever wrote the record. A host stores bytes and does not decide what they are.
 
@@ -69,19 +69,23 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 ## Security and Privacy Considerations
 
-A host that accepted files from anyone would be used to store anything. Requiring an authentication statement, holding an unreferenced blob only for a short time, and limits on each individual keep that in bounds.
+A host that accepted files from anyone would be used to store anything. A host accepts only the files that a record it holds refers to, and counts them against the individual who signed that record, so the limits on each individual keep what it stores in bounds.
+
+An upload is not signed. The CID in the signed record fixes the bytes, so it does not matter who sends them.
 
 Once a record refers to a blob and the host serves it, anyone who knows the CID can fetch it, and may keep it. Removing the record stops the host from serving the blob; it does not recall copies.
 
 Because a file has one CID, a host can tell that two people hold the same file, and so can anyone who has the file and asks a host for its CID.
 
-A host learns which DID uploads which file, and when.
+A host learns which individual's record a file belongs to, and when the file arrived.
 
 Files can carry hidden data, such as the place a photograph was taken. A host should not parse files to remove it (see [Retrieval](retrieval.md)); software removes it before it uploads.
 
 ## Possible Future Changes
 
 Large files may be uploaded in parts and resumed, and checked while they are received, with the hash types of [BDASL](https://dasl.ing/bdasl.html) (see [Data Model](data-model.md)).
+
+When bodies are encrypted, a host cannot read the blob references in them. The header may then list the files a record refers to.
 
 Questions still open in this draft:
 
