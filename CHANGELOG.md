@@ -2,7 +2,7 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
-## Unreleased
+## v0.3.7 (2026-11-15)
 
 Added:
 
@@ -13,6 +13,8 @@ Changed:
 
 - Key Handover is renamed [Login](specs/login.md), and its names are shortened in the manner of Unix names. The receiving page finds the login page at `/.well-known/zu-login`; it was `/.well-known/zu-handover`. The three messages state the `$type` values `login`, `key` and `sealed`; they were `handover-request`, `handover` and `handover-sealed`. The string a login page sends when it is ready is `zu-login-ready`, and the HKDF info string is `zu-login-1`. The module is listed as `login` in the [README](README.md). The steps of the exchange are unchanged.
 - [Synchronization](specs/sync.md): the party that starts a comparison writes the set in its request as the filter of a query, with the parameters `by`, `to` and `type`, and the other party may decline to compare a set. A record that a party holds back because its `at` is ahead of its clock belongs to the set that party holds. Each message of a comparison is carried by a request of its own, `POST /.well-known/zu-diff`, with the filter as its parameters and one Negentropy message as its body; the body of the answer is the host's message. The host keeps nothing between two requests, and answers a set it declines to compare with status 400.
+
+Still open, listed under Possible Future Changes in each specification: what was carried over from v0.3.6 and is not answered above, and, new in this version, for synchronization, how software that cannot keep a connection open is told of new records. Left to a later design: how the body of a type is defined, how classes are kept apart when the same name is chosen twice, keys that are fixed for a type or derived from another record, and a fingerprint that a writer of records cannot defeat.
 
 ## v0.3.6 (2026-11-15)
 
