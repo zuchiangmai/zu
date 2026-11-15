@@ -2,6 +2,12 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
+## Unreleased
+
+Changed:
+
+- The modules in the [README](README.md) are grouped in five lanes: Data, Sync, Net, Auth and App. A module is listed under the lane most of it belongs to, and a section of it that belongs to another lane is listed under that lane as well, such as how records are delivered (Sync), the stream of events that tells software of new records (Net), and how a type is written (App). The specifications themselves are unchanged.
+
 ## v0.3.7 (2026-11-15)
 
 Added:

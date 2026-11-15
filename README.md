@@ -30,20 +30,60 @@ Not specified yet, to be designed later:
 
 ## Modules
 
+The modules are grouped in five lanes: Data, Sync, Net, Auth and App. A module is listed under the lane most of it belongs to; a section of it that belongs to another lane is listed under that lane as well. The lanes run side by side, not one on top of another.
+
+### Data
+
+What can be stated and checked on one machine: how records are encoded, signed, addressed, linked and kept.
+
+| Module | Covers | Where |
+|---|---|---|
+| data model | How records and messages are encoded, hashed and linked: DRISL, DASL CIDs, blob references | [`specs/data-model.md`](specs/data-model.md) (draft) |
+| cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
+| record | The signed record: a signed header and a body linked by CID, the city a record is meant for, links to earlier records, time, which record a path refers to, and how records are delivered to a host | [`specs/record.md`](specs/record.md) (draft) |
+| path | A record's address, individual > type > key, written as a `zu://` URI; how a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md) (draft) |
+| blob: Keeping and Discarding | How long a host keeps a file: while a record it holds refers to it | [`specs/blob.md`](specs/blob.md#keeping-and-discarding) |
+
+### Sync
+
+What arises only between two copies: which records to compare, finding which ones each lacks, and handing records over.
+
+| Module | Covers | Where |
+|---|---|---|
+| sync | How two parties find out which records each of them lacks: the set they compare, its order, comparing by fingerprints, the request that carries a comparison, and the events that tell software of new records | [`specs/sync.md`](specs/sync.md) (draft) |
+| query | Asking a host for records: one record, an individual's records of a type, or a type across everyone the host holds records for | [`specs/query.md`](specs/query.md) (draft) |
+| record: Delivering | Giving records to a host, `POST /.well-known/zu-recs`, and what the host did with each | [`specs/record.md`](specs/record.md#delivering) |
+| blob | Files: how a file is given to a host, how long the host keeps it, and whom it counts against | [`specs/blob.md`](specs/blob.md) (draft) |
+
+### Net
+
+How parties reach each other: fetching content, relays, and telling software that something new has arrived.
+
+| Module | Covers | Where |
+|---|---|---|
+| retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
+| sync: New Records | The stream of events that tells software of new records, `GET /.well-known/zu-live` | [`specs/sync.md`](specs/sync.md#new-records) |
+| login: The Relay | The host that passes a sealed key from one device to another and cannot read it | [`specs/login.md`](specs/login.md#the-relay) |
+
+### Auth
+
+What needs someone to decide: who is who, which name is whose, which software acts for whom, and what counts against whom.
+
 | Module | Covers | Where |
 |---|---|---|
 | did | The DID methods Zu accepts, `did:zu` and `did:web`; what Zu reads from a DID document, including its Zu signing keys; and how a person signs in to another city | [`specs/did.md`](specs/did.md) (draft). The `did:zu` method itself: [`specs/did-zu.md`](specs/did-zu.md), the authoritative copy; reference implementation [4seas-community/did-method-zu](https://github.com/4seas-community/did-method-zu); directory `https://plc.zuzalu.ink` |
 | map | Handles such as `alice.4seas.example`: how a DID claims them, how a domain confirms them, and how software resolves them | [`specs/map.md`](specs/map.md) (draft) |
-| data model | How records and messages are encoded, hashed and linked: DRISL, DASL CIDs, blob references | [`specs/data-model.md`](specs/data-model.md) (draft) |
-| path | A record's address, individual > type > key, written as a `zu://` URI; how a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md) (draft) |
-| retrieval | Fetching content by its CID with DASL RASL, and checking what was fetched | [`specs/retrieval.md`](specs/retrieval.md) (draft) |
-| query | Asking a host for records: one record, an individual's records of a type, or a type across everyone the host holds records for | [`specs/query.md`](specs/query.md) (draft) |
-| blob | Files: how a file is given to a host, how long the host keeps it, and whom it counts against | [`specs/blob.md`](specs/blob.md) (draft) |
-| cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
 | login | How a person logs in to a page with a Zu signing key that another page holds: how the key is handed to the other page, on the same device and between devices | [`specs/login.md`](specs/login.md) (draft) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |
-| record | The signed record: a signed header and a body linked by CID, the city a record is meant for, links to earlier records, time, which record a path refers to, and how records are delivered to a host | [`specs/record.md`](specs/record.md) (draft) |
-| sync | How two parties find out which records each of them lacks: the set they compare, its order, comparing by fingerprints, the request that carries a comparison, and the events that tell software of new records | [`specs/sync.md`](specs/sync.md) (draft) |
+| blob: Limits | The limits a host may set, and whom a file counts against | [`specs/blob.md`](specs/blob.md#limits) |
+
+### App
+
+What different applications must agree on to read the same data.
+
+| Module | Covers | Where |
+|---|---|---|
+| path: Type Syntax | How a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md#type-syntax) |
 
 The other modules of v0.3 have not been designed yet.
 
