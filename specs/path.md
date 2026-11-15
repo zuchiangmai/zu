@@ -14,7 +14,7 @@ individual > type > key
 - The **type** names what sort of record it is. It is written as a class and a kind, such as `ev/event` (see Type Syntax below).
 - The **key** names one record among the individual's records of that type.
 
-The communities a record belongs to, and the application that wrote it, are not part of its path.
+The communities a record belongs to, and the application that wrote it, are not part of its path. A record may state the city it is meant for in its header (see [Records](record.md)); that is not part of its path either.
 
 A path is written as a `zu://` URI, for example:
 

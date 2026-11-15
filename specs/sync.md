@@ -11,6 +11,7 @@ This document covers the set of records two parties compare, the order of the re
 Two parties, such as a device and a host, or two hosts, first agree on the set of records they compare. A set is named by what record headers state, in the way a [query](query.md) names it:
 
 - by `by`: the records of one individual, or of every individual the party holds records for;
+- by `to`: the records meant for one city;
 - by `type`: the records of one type, or of every type of one class.
 
 Each party takes the records it holds that match. That includes records that have been replaced or removed: every header is kept (see [Records](record.md)), and a removal is a record, so it reaches the other party like any other.
@@ -59,7 +60,7 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 A party can leave records out of what it compares, and the comparison does not show it.
 
-The other party learns which set a party asks about, and so which individuals and types it has a use for.
+The other party learns which set a party asks about, and so which individuals, cities and types it has a use for.
 
 A fingerprint must be hard to forge: someone able to write records must not be able to choose them so that two ranges holding different records have the same fingerprint. This is a requirement on the encoding to be designed.
 

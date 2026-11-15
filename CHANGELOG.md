@@ -4,6 +4,10 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 ## Unreleased
 
+Added:
+
+- [Records](specs/record.md): a record may state the city it is meant for, in a header field `to` that holds the city's DID. A record that belongs to the person wherever they go, such as a profile, has no `to`. The field is signed with the rest of the header and is not part of the path: the record still belongs to `by`, and stays valid when the city no longer exists. It is in the header so that it can be read when the body is held back, discarded, or absent because the record removes another. [Queries](specs/query.md) filter by `to`, and [Synchronization](specs/sync.md) names a set by it. The open question on whether a record can state which cities it is meant for is answered; whether a record may be meant for several cities, and whether the records at one path may name different cities, are new open questions.
+
 Changed:
 
 - [Paths](specs/path.md) and [Records](specs/record.md): a type is written as a class and a kind, two short lowercase words separated by a slash, such as `ev/event`. It was an NSID, a reversed domain followed by a name. The path keeps its three parts, individual, type and key; as a `zu://` URI it reads `zu://<DID>/ev/event/<key>`. A class gathers related sorts of records, and is not an application: a type does not say which software wrote a record. [Queries](specs/query.md) and [Synchronization](specs/sync.md) select every type of one class with a star, as in `ev/*`.

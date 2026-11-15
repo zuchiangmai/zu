@@ -6,7 +6,7 @@ This document is not adapted from an AT Protocol specification. atproto lists th
 
 A [record](record.md) is found by its [path](path.md) when the path is known. Often it is not: software wants every note of a person, or every event written in a city. For that it sends a **query** to a host, and the host answers from the records it holds.
 
-A query filters only on what the record header states: whose record it is, its type, its key and its time. The header is readable by anyone who holds it, so a host can answer without knowing any type. Questions about what a body says, such as which notes contain a word or which events start this week, are not asked of a host: software fetches the records concerned and answers them itself. An application is a view over records, and it computes its view where the records are.
+A query filters only on what the record header states: whose record it is, the city it is meant for, its type, its key and its time. The header is readable by anyone who holds it, so a host can answer without knowing any type. Questions about what a body says, such as which notes contain a word or which events start this week, are not asked of a host: software fetches the records concerned and answers them itself. An application is a view over records, and it computes its view where the records are.
 
 This document covers the query, its parameters, the answer, and what a host must do to answer. How two parties bring their records into agreement is specified in [Synchronization](sync.md). How records reach a host is not specified yet. How records that are not public are asked for is not specified yet.
 
@@ -25,15 +25,17 @@ All parameters are optional:
 | Parameter | Selects records |
 |---|---|
 | `by` | whose header `by` is this DID |
+| `to` | whose header `to` is this DID |
 | `type` | whose header `type` is this type, or any type of one class when it is written with a star, as in `ev/*` (see [Paths](path.md)) |
 | `key` | whose header `key` is this key |
 | `since` | whose header `at` is this time or later, in milliseconds |
 | `until` | whose header `at` is earlier than this time, in milliseconds |
 
-The parameters together are a **filter**. A record matches the filter when it matches every parameter given. Three filters cover the common cases:
+The parameters together are a **filter**. A record matches the filter when it matches every parameter given. Four filters cover the common cases:
 
 - `by`, `type` and `key`: the record at one path.
 - `by` and `type`: an individual's records of one type.
+- `to` and `type`: the records of one type meant for one city, from everyone the host holds records for.
 - `type` alone: the records of one type from everyone the host holds records for.
 
 Three more parameters shape the answer:
@@ -84,7 +86,7 @@ Test vectors for this specification will be published in [`vectors/`](../vectors
 
 A host can leave records out of an answer, and nothing in the answer shows it. What it does return can be checked; that it returned everything cannot. Software that needs to know asks more than one host.
 
-A host sees every query: which DIDs, which types and which times someone asked about, and from which network address. A query for one person's records tells the host that someone is interested in that person.
+A host sees every query: which DIDs, which cities, which types and which times someone asked about, and from which network address. A query for one person's records tells the host that someone is interested in that person.
 
 With `all`, a host returns records that were replaced or removed. Removing a record does not take it out of the hands of those who already hold it (see [Records](record.md)).
 

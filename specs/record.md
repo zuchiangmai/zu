@@ -8,20 +8,21 @@ A **record** is one piece of an individual's data, such as a note or a profile. 
 
 A record is made of two parts:
 
-- a **header**, a small map that states the record's path, its time, the earlier records it follows and the CID of its body, and that carries the signature;
+- a **header**, a small map that states the record's path, the city it is meant for, its time, the earlier records it follows and the CID of its body, and that carries the signature;
 - a **body**, the content itself, in the shape that the record's type defines.
 
 The header is what is signed. The body is tied to it by its CID. A record can therefore be checked with its header alone, and stays checkable when its body is fetched later, held back or discarded.
 
-This document covers the header, the body, signing, verification, links to earlier records, time, and which record a path refers to. How software asks a host for records is specified in [Queries](query.md), and how two parties find out which records each of them lacks in [Synchronization](sync.md). How the body of a type is defined, and how records that are not public are handled, are left to later documents.
+This document covers the header, the body, signing, verification, the city a record is meant for, links to earlier records, time, and which record a path refers to. How software asks a host for records is specified in [Queries](query.md), and how two parties find out which records each of them lacks in [Synchronization](sync.md). How the body of a type is defined, and how records that are not public are handled, are left to later documents.
 
 ## Header
 
-A header is a map in the [Data Model](data-model.md) with these fields, all of them required:
+A header is a map in the [Data Model](data-model.md) with these fields. All of them are required, except `to`:
 
 - `$type` (string): the fixed value `record`.
 - `v` (integer): the fixed value `1`.
 - `by` (string): the DID of the individual the record belongs to (see [DIDs](did.md)).
+- `to` (string, optional): the DID of the city the record is meant for (see Cities). A record that is not meant for a city has no `to` field.
 - `type` (string): the type of the record, written as a class and a kind, such as `ev/event` (see [Paths](path.md)).
 - `key` (string): the key of the record (see [Paths](path.md)).
 - `at` (integer): when the record was signed, in milliseconds since 1970-01-01T00:00:00Z, as reported by the signer (see Time).
@@ -30,7 +31,7 @@ A header is a map in the [Data Model](data-model.md) with these fields, all of t
 - `pub` (string): the public key of the Zu signing key that signed the header, in multikey encoding (see [Cryptography](cryptography.md)).
 - `sig` (bytes): the signature (see Signing).
 
-`by`, `type` and `key` together are the record's path. They are inside the signed header, so a record cannot be presented under a path other than the one it was signed for.
+`by`, `type` and `key` together are the record's path. They are inside the signed header, so a record cannot be presented under a path other than the one it was signed for. `to` is not part of the path.
 
 Software should ignore header fields it does not know. It must keep them when it stores a header or passes it on, because they are part of the signed bytes.
 
@@ -43,6 +44,7 @@ In JSON, a header looks like this:
   "$type": "record",
   "v": 1,
   "by": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
+  "to": "did:zu:q4cm5j2xk7hvn3oaz6t2wplb",
   "type": "ev/event",
   "key": "self",
   "at": 1794528000000,
@@ -76,7 +78,7 @@ To sign a record:
 A record is valid only if all of the following hold:
 
 - the header is a DRISL map with every required field, each of the right type; `$type` is `record` and `v` is `1`
-- `by` is a syntactically valid DID of a method Zu accepts, `type` is a valid type and `key` is a valid key (see [Paths](path.md))
+- `by` is a syntactically valid DID of a method Zu accepts, and so is `to` when it is present; `type` is a valid type and `key` is a valid key (see [Paths](path.md))
 - `prev` has no duplicates and is sorted
 - the signature in `sig` is valid for the header without `sig`, under the public key in `pub`, by the rules in [Cryptography](cryptography.md)
 - `pub` is a Zu signing key of `by` (see Keys and the DID Document)
@@ -94,6 +96,19 @@ A key may have been removed from the DID document after the record was signed, f
 
 - For `did:zu`, a record is also valid if `pub` was a Zu signing key of the DID at an earlier point of its operation log, and the record's `at` is not later than the time at which the directory recorded the operation that removed the key.
 - For `did:web`, which keeps no history, only the keys in the current document count.
+
+## Cities
+
+A record may state the city it is meant for, in `to`. A city is an individual with a DID of its own (see [DIDs](did.md)).
+
+- A record written for a city, such as an event held there, names that city in `to`.
+- A record that belongs to the person wherever they go, such as a profile, has no `to`.
+
+`to` is inside the signed header, so a record cannot be presented as meant for a city other than the one it was signed for. It is stated in the header, and not only in the body, so that it can be read from a record whose body is held back or discarded, and from a record that removes another and so has no body.
+
+`to` does not change whom a record belongs to. The record belongs to `by`, and stays a valid record of that individual when the city no longer exists.
+
+A host that keeps records for a city tells from `to` which records are meant for that city. Software acting for a city does not treat a record that names another city as meant for it. Which records a host accepts is the host's own matter.
 
 ## Earlier Records
 
@@ -154,6 +169,7 @@ This section is informative.
 - **p2panda**, **Willow** and **Subduction** sign a small header or entry that carries the hash of the content, which is stored apart from it. Zu's header and body follow that shape. Like a Willow entry, the header states its own path.
 - **Automerge**, **Subduction** and **Radicle** let a change list the hashes of the changes it was made after, across authors. `prev` is that list.
 - **Nostr** signs every event by itself, as Zu does, and chooses between two versions by the author's timestamp. Zu looks at `prev` first, and uses time only between concurrent records.
+- **Matrix**, the relay-based groups of **Nostr** and **Willow** state in every signed item which room, group or namespace it belongs to. `to` does that for a city, and leaves the city out of the path, so that a record remains the individual's own.
 - **Evolu** stamps every change with a hybrid logical clock and holds back changes whose time is too far ahead. The rules for `at` follow it.
 
 ## Usage and Implementation Guidelines
@@ -176,11 +192,11 @@ Whoever holds a Zu signing key of a DID can sign records for it, at any path. A 
 
 Someone who has obtained a key that was since removed from the DID document can still sign records with an `at` before the removal. Such records cannot follow any record made after the removal, because their `at` would not be greater, so they cannot replace it; at a path that was written after the removal they are concurrent records with a lower `at`, and the path does not refer to them. At a path that was not written since, they are accepted. This specification does not prevent that.
 
-A record is valid wherever it is checked. A record signed in one city counts in every other city, and anyone who has a record can pass it on.
+A record is valid wherever it is checked, and anyone who has a record can pass it on. A record that names a city in `to` is meant for that city only. A record without `to` counts in every city.
 
 Nothing in a record shows that other records exist. A host that holds back a record of an individual cannot be detected from the records it does serve.
 
-The header is not hidden. Whoever holds a header sees the DID, the type, the key, the time and the signing key, and through `prev` which records the signer had seen, even when the body is held back. Keys are chosen by the signer and may themselves carry information.
+The header is not hidden. Whoever holds a header sees the DID, the city the record is meant for, the type, the key, the time and the signing key, and through `prev` which records the signer had seen, even when the body is held back. Keys are chosen by the signer and may themselves carry information.
 
 Parsing untrusted headers and bodies carries the risks described in the [Data Model](data-model.md).
 
@@ -196,7 +212,8 @@ Questions still open in this draft:
 
 - Whether the header also states the size of the body, so that a host can refuse a body before fetching it.
 - How records signed with a key that was stolen are told apart from the individual's own.
-- Whether a record can state which cities it is meant for, so that a record signed in one city does not count in another.
+- Whether a record may be meant for several cities.
+- Whether the records written at one path may name different cities.
 - Whether records are numbered for each signing key, so that a missing record can be noticed.
 - What the limits on the size of a header and on the number of entries in `prev` are.
 - Whether a host keeps the body of a record that has been replaced but not removed.
