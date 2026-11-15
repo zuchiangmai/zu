@@ -1,46 +1,48 @@
-# Capabilities
+# Services
 
-A specification for what a host can do for applications besides keeping records: how a capability and its calls are described, how a host states which capabilities it has loaded, and how software calls one.
+A specification for what a host can do for applications besides keeping records: how a service and its calls are described, how a host states which services it has loaded, and how software calls one.
 
 This document is adapted, with changes, from the [AT Protocol Lexicon specification](https://atproto.com/specs/lexicon), and follows the [AT Protocol HTTP API specification](https://atproto.com/specs/xrpc) (bluesky-social/atproto-website, commit `59daa1f`); both are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is a draft; the questions still open are listed under Possible Future Changes.
 
-Every host keeps records and files and answers for them (see [Records](record.md), [Queries](query.md), [Synchronization](sync.md) and [Blobs](blob.md)). Some applications need more from the host of a city: a recording turned into text, a question put to a language model, a picture drawn. Work of this kind is a **capability**. A host does not have every capability. It **loads** the ones its city has a use for. An application, written by anyone, asks for a capability by its name, and works in every city whose host has loaded it.
+Every host keeps records and files and answers for them (see [Records](record.md), [Queries](query.md), [Synchronization](sync.md) and [Blobs](blob.md)). Some applications need more from the host of a city: a recording turned into text, a question put to a language model, a picture drawn. Work of this kind is a **service**. A host does not have every service. It **loads** the ones its city has a use for. An application, written by anyone, asks for a service by its name, and works in every city whose host has loaded it.
 
-This document covers the names of capabilities and calls, the description of a capability, the list of what a host has loaded, and the request that makes a call. Who does the work of a capability, the host itself or a service elsewhere, is the host's own matter. How a city records which capabilities it loads, and how an application states which ones it needs, are not specified yet.
+This document covers the names of services and calls, the description of a service, the list of what a host has loaded, and the request that makes a call. Who does the work of a service, the host itself or a provider elsewhere, is the host's own matter. How a city records which services it loads, and how an application states which ones it needs, are not specified yet.
 
-## Capabilities and Calls
+## Services and Calls
 
-A **capability** is one kind of work a host does for applications. It has one or more **calls**. A call takes an input, and either gives back an output or fails with a word that says why.
+A **service** is one kind of work a host does for applications. It has one or more **calls**. A call takes an input, and either gives back an output or fails with a word that says why.
 
-A capability is for one use, and its description states every call it has, what each call takes and what it gives back. Software can then tell what it may call without trying. A capability that took any work as its input could not be described in this way, and each host would read such an input in its own way.
+Zu keeps the word capability for something else: a signed pass that states what its holder may do, which the holder can hand on only with less (see the [README](../README.md)). A service is work a host does when asked.
+
+A service is for one use, and its description states every call it has, what each call takes and what it gives back. Software can then tell what it may call without trying. A service that took any work as its input could not be described in this way, and each host would read such an input in its own way.
 
 ## Names
 
-A capability and a call each have a name. The two are written as the two segments of a type are (see [Paths](path.md#type-syntax)), the capability first:
+A service and a call each have a name. The two are written as the two segments of a type are (see [Paths](path.md#type-syntax)), the service first:
 
 ```
 stt/start
 ```
 
-- The name of a **capability** has at least 1 and at most 32 characters; the allowed characters are lowercase ASCII letters (`a-z`), digits (`0-9`) and hyphens (`-`); the first character is a letter.
+- The name of a **service** has at least 1 and at most 32 characters; the allowed characters are lowercase ASCII letters (`a-z`), digits (`0-9`) and hyphens (`-`); the first character is a letter.
 - The name of a **call** has at least 1 and at most 32 characters; the allowed characters are lowercase ASCII letters, digits and hyphens.
 
-A reference regex for a capability and a call written together is:
+A reference regex for a service and a call written together is:
 
 ```
 /^[a-z][a-z0-9-]{0,31}\/[a-z0-9-]{1,32}$/
 ```
 
-An application names the capability it needs, not the host or the service that does the work. Several services may offer the same capability, and a city chooses among them.
+An application names the service it needs, not the host or the provider that does the work. Several providers may offer the same service, and a city chooses among them.
 
 ## The Description
 
-A **description** says what a capability is and which calls it has. It is a map in the [Data Model](data-model.md), with these fields:
+A **description** says what a service is and which calls it has. It is a map in the [Data Model](data-model.md), with these fields:
 
-- `$type` (string, required): the fixed value `cap`.
+- `$type` (string, required): the fixed value `svc`.
 - `v` (integer, required): the version of this format, currently `1`.
-- `name` (string, required): the name of the capability.
-- `doc` (string, optional): what the capability is for, in one or two sentences.
+- `name` (string, required): the name of the service.
+- `doc` (string, optional): what the service is for, in one or two sentences.
 - `calls` (map, required): the calls, each under its name. It has at least one entry.
 
 Each entry of `calls` is a map with these fields, all optional:
@@ -54,11 +56,11 @@ The names of these fields are not keywords of common programming languages, so t
 
 A description is encoded in DRISL and named by its CID. Two hosts that state the same CID follow the same description.
 
-For example, a capability that turns a recording into text, in the JSON form of the data model. The example is informative: this document defines no capability.
+For example, a service that turns a recording into text, in the JSON form of the data model. The example is informative: this document defines no service.
 
 ```json
 {
-  "$type": "cap",
+  "$type": "svc",
   "v": 1,
   "name": "stt",
   "doc": "Turns a recording of speech into text.",
@@ -127,28 +129,28 @@ A field whose name is not in `fields` is not described. A host ignores such a fi
 
 ## What a Host Has Loaded
 
-Software asks a host which capabilities it has loaded with an HTTP `GET` request:
+Software asks a host which services it has loaded with an HTTP `GET` request:
 
 ```
-GET https://<host>/.well-known/zu-cap?<parameters>
+GET https://<host>/.well-known/zu-svc?<parameters>
 ```
 
 One parameter is defined:
 
 | Parameter | Meaning |
 |---|---|
-| `to` | the DID of the city whose capabilities are asked for |
+| `to` | the DID of the city whose services are asked for |
 
-A host that runs several cities loads capabilities for each city separately, and answers a request without `to` with status 400. A host that runs one city answers for that city when `to` is absent.
+A host that runs several cities loads services for each city separately, and answers a request without `to` with status 400. A host that runs one city answers for that city when `to` is absent.
 
 A successful answer has status 200 and a body that is a map, encoded in DRISL, with these fields:
 
-- `caps` (map, required): the capabilities the asker may call, each under its name. An entry is a map with one field, `spec` (link, required): the CID of the description the host follows for that capability.
+- `svcs` (map, required): the services the asker may call, each under its name. An entry is a map with one field, `spec` (link, required): the CID of the description the host follows for that service.
 - `blocks` (map, optional): descriptions the host chose to send along, each a map, under the string form of its CID.
 
 The list is the asker's. A request may carry an authentication statement (see [Request Authentication](auth.md)), and the host then lists what that DID may call. Without a statement, the host lists what anyone may call.
 
-Software that does not hold a description fetches it by its CID (see [Retrieval](retrieval.md)) and checks it against that CID. A capability that is not in `caps` is not loaded for the asker, and software does not call it.
+Software that does not hold a description fetches it by its CID (see [Retrieval](retrieval.md)) and checks it against that CID. A service that is not in `svcs` is not loaded for the asker, and software does not call it.
 
 The answer carries the header `Access-Control-Allow-Origin: *`, so that a page of another origin can read it.
 
@@ -157,12 +159,12 @@ The answer carries the header `Access-Control-Allow-Origin: *`, so that a page o
 Software makes a call with an HTTP `POST` request:
 
 ```
-POST https://<host>/.well-known/zu-cap/<capability>/<call>?<parameters>
+POST https://<host>/.well-known/zu-svc/<service>/<call>?<parameters>
 
 <a map, encoded in DRISL>
 ```
 
-`<capability>` and `<call>` are the two names. The parameter `to` has the meaning it has above. The body is the input: a map with the fields that the `args` of the call describes.
+`<service>` and `<call>` are the two names. The parameter `to` has the meaning it has above. The body is the input: a map with the fields that the `args` of the call describes.
 
 A successful answer has status 200 and a body that is the output: a map, encoded in DRISL, with the fields that the `ret` of the call describes.
 
@@ -177,7 +179,7 @@ Every call may fail with these words:
 |---|---|---|
 | `bad` | 400 | the input does not follow the description |
 | `deny` | 403 | the host does not make this call for the asker |
-| `none` | 404 | the host has not loaded the capability, or the capability has no such call |
+| `none` | 404 | the host has not loaded the service, or the service has no such call |
 | `big` | 413 | the input is larger than the host accepts |
 | `full` | 429 | the allowance of the asker, or of the city, is used up |
 | `busy` | 503 | the host cannot do the work now; software may call again later |
@@ -190,7 +192,7 @@ The answer carries the header `Access-Control-Allow-Origin: *`, so that a page o
 
 ## Changing a Description
 
-A description is named by its CID, so a changed description is another description. A host states one description for each capability it has loaded.
+A description is named by its CID, so a changed description is another description. A host states one description for each service it has loaded.
 
 A description that replaces another under the same name changes it only within bounds, so that software written for either one works with a host that follows the other:
 
@@ -201,25 +203,25 @@ A description that replaces another under the same name changes it only within b
 - the `type` of a field does not change;
 - a word may be added to `errs`, and is not removed.
 
-A change beyond these needs a new name for the capability.
+A change beyond these needs a new name for the service.
 
 ## Usage and Implementation Guidelines
 
-Describe one use in one capability. A capability with a few calls that say exactly what they take can be offered by several services and used by many applications; a capability that tries to cover every use cannot.
+Describe one use in one service. A service with a few calls that say exactly what they take can be offered by several providers and used by many applications; a service that tries to cover every use cannot.
 
-A call answers when its work is done. A capability whose work takes long has one call that starts the work and another that asks for its result, as in the example above.
+A call answers when its work is done. A service whose work takes long has one call that starts the work and another that asks for its result, as in the example above.
 
 A call carries no file. Software gives the file to the host as a blob (see [Blobs](blob.md)) and puts its CID in the input.
 
-An application should work without a capability its city has not loaded, or say plainly which capability is missing.
+An application should work without a service its city has not loaded, or say plainly which service is missing.
 
-A host that passes a call on to a service elsewhere answers as if it did the work itself: it checks who is asking and what the city allows before it passes the call on, and software does not learn where the work was done.
+A host that passes a call on to a provider elsewhere answers as if it did the work itself: it checks who is asking and what the city allows before it passes the call on, and software does not learn where the work was done.
 
 Test vectors for this specification will be published in [`vectors/`](../vectors/).
 
 ## Security and Privacy Considerations
 
-Whoever does the work of a capability sees the input. When a host passes a call on to a service elsewhere, that service sees it as well. A city that loads a capability decides whom it lets see what its people send.
+Whoever does the work of a service sees the input. When a host passes a call on to a provider elsewhere, that provider sees it as well. A city that loads a service decides whom it lets see what its people send.
 
 A call can cost the city money or space. A host should know who is asking before it makes such a call, and should limit how much each asker may use.
 
@@ -227,7 +229,7 @@ An authentication statement names the host and not the call (see [Request Authen
 
 A name does not say which description a host follows; the CID in `spec` does. Software that depends on the exact shape of a call compares that CID with the one it was written for.
 
-A description is data. A host that loads a capability does not run anything that the description contains.
+A description is data. A host that loads a service does not run anything that the description contains.
 
 The list of what a host has loaded is public, and shows what a city spends its means on.
 
@@ -237,13 +239,15 @@ Field descriptions may take the constraints, references and unions that the defi
 
 A description may become the body of a record, so that it has an author and a path.
 
-An application may later also call a service directly, with credentials that the person has set up, without depending on the city.
+An application may later also call a provider directly, with credentials that the person has set up, without depending on the city.
+
+Who may call a service may later be stated by a capability that the asker holds, instead of by a list that the host keeps.
 
 Questions still open in this draft:
 
-- How a city records which capabilities it loads, and which service does the work of each.
-- How an application states the capabilities it needs.
-- How the names of capabilities are kept apart when the same name is chosen twice.
+- How a city records which services it loads, and which provider does the work of each.
+- How an application states the services it needs.
+- How the names of services are kept apart when the same name is chosen twice.
 - Whether a description states the limits a host may set, such as how long a recording may be, and how a host lists the values it has set.
 - Whether calls that change nothing are told apart from the others, so that their answers can be cached.
 - How a call takes a file that no record refers to.

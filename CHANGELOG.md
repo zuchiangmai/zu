@@ -6,17 +6,19 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 Changed:
 
-- [Capabilities](specs/cap.md): names in a description are not keywords of common programming languages. The input of a call is described under `args`, which was `in`, and its output under `ret`, which was `out`. In the list of what a host has loaded, the CID of a description is under `spec`, which was `def`.
+- Capabilities is renamed [Services](specs/svc.md), so that the word capability is kept for a signed pass that states what its holder may do (see the [README](README.md)). The module is listed as `svc`. A host lists the services it has loaded at `GET /.well-known/zu-svc`, which was `zu-cap`, under `svcs`, which was `caps`, and software makes a call with `POST /.well-known/zu-svc/<service>/<call>`. A description states the `$type` value `svc`, which was `cap`.
+- [Services](specs/svc.md): names in a description are not keywords of common programming languages. The input of a call is described under `args`, which was `in`, and its output under `ret`, which was `out`. In the list of what a host has loaded, the CID of a description is under `spec`, which was `def`.
 
 Added:
 
-- [Capabilities](specs/cap.md) lists, under Possible Future Changes, that an application may later also call a service directly with credentials that the person has set up, without depending on the city.
+- [Services](specs/svc.md) lists, under Possible Future Changes, that an application may later also call a provider directly with credentials that the person has set up, without depending on the city, and that who may call a service may later be stated by a capability.
+- The [README](README.md) states a direction, not specified yet: permissions are capabilities, signed passes that their holders can hand on only with less, as in Meadowcap, UCAN and Keyhive.
 
 ## v0.3.8 (2026-11-15)
 
 Added:
 
-- [Capabilities](specs/cap.md), a new specification under App: what a host can do for applications besides keeping records. A capability has a name and one or more calls, written together as `stt/start`. Its description is a map that states each call, the shape of its input and of its output as field descriptions, and the words it may fail with; the description is named by its CID. A host lists the capabilities it has loaded at `GET /.well-known/zu-cap`, each with the CID of the description it follows, and software makes a call with `POST /.well-known/zu-cap/<capability>/<call>`. Every call may fail with `bad`, `deny`, `none`, `big`, `full` or `busy`. How a city records which capabilities it loads, and how an application states which ones it needs, are not specified yet.
+- [Capabilities](specs/svc.md), a new specification under App: what a host can do for applications besides keeping records. A capability has a name and one or more calls, written together as `stt/start`. Its description is a map that states each call, the shape of its input and of its output as field descriptions, and the words it may fail with; the description is named by its CID. A host lists the capabilities it has loaded at `GET /.well-known/zu-cap`, each with the CID of the description it follows, and software makes a call with `POST /.well-known/zu-cap/<capability>/<call>`. Every call may fail with `bad`, `deny`, `none`, `big`, `full` or `busy`. How a city records which capabilities it loads, and how an application states which ones it needs, are not specified yet.
 - The [README](README.md) notes, under App, a mechanism to be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
 - The [README](README.md) notes, under App, that reproducible builds will be introduced later, by which anyone can check that an application was built from its source.
 

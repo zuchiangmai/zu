@@ -6,7 +6,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for, fetched and delivered to a host, how files are given to a host and kept, how two parties find out which records each of them lacks, and how software learns of new records. It also specifies, as a first draft, how a host describes, lists and answers the capabilities it has loaded for applications.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for, fetched and delivered to a host, how files are given to a host and kept, how two parties find out which records each of them lacks, and how software learns of new records. It also specifies, as a first draft, how a host describes, lists and answers the services it has loaded for applications.
 
 It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
@@ -16,6 +16,7 @@ Being designed now, not specified yet:
 
 Direction set, not specified yet:
 
+- Permissions are capabilities. A capability is a signed pass that states what its holder may do; the holder can hand it on, only with less. A host checks the pass rather than a list of who may do what, as in [Meadowcap](https://willowprotocol.org/specs/meadowcap/), [UCAN](https://github.com/ucan-wg/spec) and [Keyhive](https://github.com/inkandswitch/keyhive). In Zu the word capability is kept for this.
 - Everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. Different applications can then be created freely, while the data is more durable (see [Path](specs/path.md#possible-future-changes)).
 - For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](specs/record.md) lets a record list the earlier records it follows; which data is organized this way is not specified yet.
 
@@ -84,7 +85,7 @@ What different applications must agree on to read the same data.
 | Module | Covers | Where |
 |---|---|---|
 | path: Type Syntax | How a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md#type-syntax) |
-| cap | What a host can do for applications besides keeping records: how a capability and its calls are described, how a host lists the capabilities it has loaded, and how software calls one | [`specs/cap.md`](specs/cap.md) (draft) |
+| svc | What a host can do for applications besides keeping records: how a service and its calls are described, how a host lists the services it has loaded, and how software calls one | [`specs/svc.md`](specs/svc.md) (draft) |
 
 To be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
 
