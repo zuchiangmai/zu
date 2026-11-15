@@ -87,6 +87,8 @@ What different applications must agree on to read the same data.
 
 To be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
 
+To be introduced later: reproducible builds, by which anyone can check that an application was built from its source.
+
 The other modules of v0.3 have not been designed yet.
 
 ## Layout

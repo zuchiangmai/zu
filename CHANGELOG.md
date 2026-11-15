@@ -7,6 +7,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 Added:
 
 - The [README](README.md) notes, under App, a mechanism to be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
+- The [README](README.md) notes, under App, that reproducible builds will be introduced later, by which anyone can check that an application was built from its source.
 
 Changed:
 
