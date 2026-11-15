@@ -2,7 +2,7 @@
 
 A specification for how two parties find out which records each of them lacks: which records they compare, in which order, and how they narrow down the differences.
 
-This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how a set is written in a request, how the messages are carried, how a record is delivered to a host, and how software learns of new records are left to a later design. The questions still open are listed under Possible Future Changes.
+This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how the messages are carried, how a record is delivered to a host, and how software learns of new records are left to a later design. The questions still open are listed under Possible Future Changes.
 
 This document covers the set of records two parties compare, what stands for a record, the order of the records in the set, and comparing by fingerprints. What a record is, and which records a host keeps, is specified in [Records](record.md). How content is fetched once a party knows what it lacks is specified in [Retrieval](retrieval.md), and how files follow records in [Blobs](blob.md). How a record is delivered to a host, and how software learns of new records as they arrive, are not specified yet.
 
@@ -14,7 +14,9 @@ Two parties, such as a device and a host, or two hosts, first agree on the set o
 - by `to`: the records meant for one city;
 - by `type`: the records of one type, or of every type of one class.
 
-Each party takes the records it holds that match. That includes records that have been replaced or removed: every header is kept (see [Records](record.md)), and a removal is a record, so it reaches the other party like any other.
+The party that starts a comparison writes the set in its request as the filter of a query: the parameters `by`, `to` and `type`, with the meaning they have in [Queries](query.md). The other party compares the records it holds that match the same filter. It may decline to compare a set, as a host may decline a query.
+
+Each party takes the records it holds that match. That includes records that have been replaced or removed: every header is kept (see [Records](record.md)), and a removal is a record, so it reaches the other party like any other. It also includes a record that is held back because its `at` is ahead of the party's clock: such a record is stored, and so it is held.
 
 A party need not compare everything it holds. A device compares the sets it has a use for.
 
@@ -81,7 +83,7 @@ Slow or offline links may use a different way of comparing sets.
 
 Questions still open in this draft:
 
-- How a set is written in a request, and how the messages are carried between the parties.
+- How the filter and the messages are carried between the parties.
 - Whether a set can also be narrowed by key.
 - How a record is delivered to a host.
 - How software learns of new records as they arrive.
