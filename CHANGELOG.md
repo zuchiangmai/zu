@@ -2,7 +2,7 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
-## Unreleased
+## v0.3.6 (2026-11-15)
 
 Added:
 
@@ -18,6 +18,8 @@ Changed:
 Removed:
 
 - [NSIDs](https://github.com/zuchiangmai/zu/blob/v0.3.5/specs/nsid.md) and [Types](https://github.com/zuchiangmai/zu/blob/v0.3.5/specs/type.md) are withdrawn; their text stays at the tag `v0.3.5`. How the body of a type is defined, and how classes are kept apart when the same name is chosen twice, will be designed later; the [README](README.md) lists both under what is left for later. [Data Model](specs/data-model.md) no longer lists the values of a union among the uses of `$type`, and [Blobs](specs/blob.md) no longer says that a type may narrow what a blob field accepts. The open questions of the two documents go with them.
+
+Still open, listed under Possible Future Changes in each specification: what was carried over from v0.3.5 and is not answered above, and, new in this version, whether a record may be meant for several cities, whether the records written at one path may name different cities, and, for synchronization, how a set is written in a request and how the messages are carried between the parties. Left to a later design: how the body of a type is defined, how classes are kept apart when the same name is chosen twice, keys that are fixed for a type or derived from another record, and a fingerprint that a writer of records cannot defeat.
 
 ## v0.3.5 (2026-11-14)
 
