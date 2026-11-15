@@ -2,9 +2,9 @@
 
 A specification for how two parties find out which records each of them lacks: which records they compare, in which order, and how they narrow down the differences.
 
-This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how the messages are carried, how a record is delivered to a host, and how software learns of new records are left to a later design. The questions still open are listed under Possible Future Changes.
+This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how a record is delivered to a host, and how software learns of new records are left to a later design. The questions still open are listed under Possible Future Changes.
 
-This document covers the set of records two parties compare, what stands for a record, the order of the records in the set, and comparing by fingerprints. What a record is, and which records a host keeps, is specified in [Records](record.md). How content is fetched once a party knows what it lacks is specified in [Retrieval](retrieval.md), and how files follow records in [Blobs](blob.md). How a record is delivered to a host, and how software learns of new records as they arrive, are not specified yet.
+This document covers the set of records two parties compare, what stands for a record, the order of the records in the set, comparing by fingerprints, and the request that carries a comparison. What a record is, and which records a host keeps, is specified in [Records](record.md). How content is fetched once a party knows what it lacks is specified in [Retrieval](retrieval.md), and how files follow records in [Blobs](blob.md). How a record is delivered to a host, and how software learns of new records as they arrive, are not specified yet.
 
 ## The Set
 
@@ -49,6 +49,27 @@ The fingerprint and the messages are those of Negentropy protocol version 1. The
 
 Comparing ends when no range is left whose fingerprints differ.
 
+## The Request
+
+A comparison is carried by HTTP requests. The party that starts it sends each of its messages in a request of its own, to a host of the other party, which is found as for a [query](query.md):
+
+```
+POST https://<host>/.well-known/zu-diff?<parameters>
+Content-Type: application/octet-stream
+
+<one Negentropy message>
+```
+
+The parameters are the filter that names the set: `by`, `to` and `type`, written as in a query. Every request of a comparison carries the same filter.
+
+A successful answer has status 200, and its body is one Negentropy message: the host's answer to the message in the request. The party that started sends requests until it has no further message to send.
+
+The host keeps nothing between two requests. It answers each request from the records it holds at that moment that match the filter.
+
+A host that declines to compare a set, or cannot parse a request, answers with status 400.
+
+The answer carries the header `Access-Control-Allow-Origin: *`, so that a page of another origin can read it.
+
 ## After Comparing
 
 Comparing transfers no records. It tells the party that sent the first message which records each of the two lacks; the other party does not learn it from the comparison.
@@ -83,7 +104,6 @@ Slow or offline links may use a different way of comparing sets.
 
 Questions still open in this draft:
 
-- How the filter and the messages are carried between the parties.
 - Whether a set can also be narrowed by key.
 - How a record is delivered to a host.
 - How software learns of new records as they arrive.

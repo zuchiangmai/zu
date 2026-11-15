@@ -7,7 +7,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 Changed:
 
 - Key Handover is renamed [Login](specs/login.md), and its names are shortened in the manner of Unix names. The receiving page finds the login page at `/.well-known/zu-login`; it was `/.well-known/zu-handover`. The three messages state the `$type` values `login`, `key` and `sealed`; they were `handover-request`, `handover` and `handover-sealed`. The string a login page sends when it is ready is `zu-login-ready`, and the HKDF info string is `zu-login-1`. The module is listed as `login` in the [README](README.md). The steps of the exchange are unchanged.
-- [Synchronization](specs/sync.md): the party that starts a comparison writes the set in its request as the filter of a query, with the parameters `by`, `to` and `type`, and the other party may decline to compare a set. A record that a party holds back because its `at` is ahead of its clock belongs to the set that party holds. How the filter and the messages are carried is still open.
+- [Synchronization](specs/sync.md): the party that starts a comparison writes the set in its request as the filter of a query, with the parameters `by`, `to` and `type`, and the other party may decline to compare a set. A record that a party holds back because its `at` is ahead of its clock belongs to the set that party holds. Each message of a comparison is carried by a request of its own, `POST /.well-known/zu-diff`, with the filter as its parameters and one Negentropy message as its body; the body of the answer is the host's message. The host keeps nothing between two requests, and answers a set it declines to compare with status 400.
 
 ## v0.3.6 (2026-11-15)
 
