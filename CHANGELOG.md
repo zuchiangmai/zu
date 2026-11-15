@@ -2,7 +2,7 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
-## Unreleased
+## v0.3.8 (2026-11-15)
 
 Added:
 
@@ -13,6 +13,8 @@ Added:
 Changed:
 
 - The modules in the [README](README.md) are grouped in five lanes: Data, Sync, Net, Auth and App. A module is listed under the lane most of it belongs to, and a section of it that belongs to another lane is listed under that lane as well, such as how records are delivered (Sync), the stream of events that tells software of new records (Net), and how a type is written (App). The specifications themselves are unchanged.
+
+Still open, listed under Possible Future Changes in each specification: what was carried over from v0.3.7 and is not answered above, and, new in this version, for capabilities, how a city records which capabilities it loads and which service does the work of each, how an application states the capabilities it needs, how the names of capabilities are kept apart when the same name is chosen twice, whether a description states the limits a host may set, whether calls that change nothing are told apart from the others, and how a call takes a file that no record refers to. Left to a later design: how the body of a type is defined, how classes are kept apart when the same name is chosen twice, keys that are fixed for a type or derived from another record, a fingerprint that a writer of records cannot defeat, the security scorecard of an application, and reproducible builds.
 
 ## v0.3.7 (2026-11-15)
 
