@@ -2,6 +2,16 @@
 
 What each version of Zu v0.3 changed from the version before. Each version is marked by a git tag of the same name. Changes not yet released are listed under Unreleased.
 
+## Unreleased
+
+Changed:
+
+- [Capabilities](specs/cap.md): names in a description are not keywords of common programming languages. The input of a call is described under `args`, which was `in`, and its output under `ret`, which was `out`. In the list of what a host has loaded, the CID of a description is under `spec`, which was `def`.
+
+Added:
+
+- [Capabilities](specs/cap.md) lists, under Possible Future Changes, that an application may later also call a service directly with credentials that the person has set up, without depending on the city.
+
 ## v0.3.8 (2026-11-15)
 
 Added:

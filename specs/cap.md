@@ -46,9 +46,11 @@ A **description** says what a capability is and which calls it has. It is a map 
 Each entry of `calls` is a map with these fields, all optional:
 
 - `doc` (string): what the call does, in one or two sentences.
-- `in` (map): the shape of the input, a field description of type `map`. Without it, the call takes an empty map.
-- `out` (map): the shape of the output, a field description of type `map`. Without it, the call gives back an empty map.
+- `args` (map): the shape of the input, a field description of type `map`. Without it, the call takes an empty map.
+- `ret` (map): the shape of the output, a field description of type `map`. Without it, the call gives back an empty map.
 - `errs` (map): the words with which this call may fail, besides the ones every call may fail with (see A Call). Each word is the name of an entry, and the entry is a sentence that says when the call fails with it. A word has the syntax of a call name.
+
+The names of these fields are not keywords of common programming languages, so that software generated from a description can use them as they are.
 
 A description is encoded in DRISL and named by its CID. Two hosts that state the same CID follow the same description.
 
@@ -63,7 +65,7 @@ For example, a capability that turns a recording into text, in the JSON form of 
   "calls": {
     "start": {
       "doc": "Starts work on one recording.",
-      "in": {
+      "args": {
         "type": "map",
         "req": ["ref"],
         "fields": {
@@ -71,7 +73,7 @@ For example, a capability that turns a recording into text, in the JSON form of 
           "lang": { "type": "string", "doc": "The language spoken." }
         }
       },
-      "out": {
+      "ret": {
         "type": "map",
         "req": ["job"],
         "fields": {
@@ -82,12 +84,12 @@ For example, a capability that turns a recording into text, in the JSON form of 
     },
     "get": {
       "doc": "Asks how far a piece of work has come.",
-      "in": {
+      "args": {
         "type": "map",
         "req": ["job"],
         "fields": { "job": { "type": "string" } }
       },
-      "out": {
+      "ret": {
         "type": "map",
         "req": ["done"],
         "fields": {
@@ -141,7 +143,7 @@ A host that runs several cities loads capabilities for each city separately, and
 
 A successful answer has status 200 and a body that is a map, encoded in DRISL, with these fields:
 
-- `caps` (map, required): the capabilities the asker may call, each under its name. An entry is a map with one field, `def` (link, required): the CID of the description the host follows for that capability.
+- `caps` (map, required): the capabilities the asker may call, each under its name. An entry is a map with one field, `spec` (link, required): the CID of the description the host follows for that capability.
 - `blocks` (map, optional): descriptions the host chose to send along, each a map, under the string form of its CID.
 
 The list is the asker's. A request may carry an authentication statement (see [Request Authentication](auth.md)), and the host then lists what that DID may call. Without a statement, the host lists what anyone may call.
@@ -160,9 +162,9 @@ POST https://<host>/.well-known/zu-cap/<capability>/<call>?<parameters>
 <a map, encoded in DRISL>
 ```
 
-`<capability>` and `<call>` are the two names. The parameter `to` has the meaning it has above. The body is the input: a map with the fields that the `in` of the call describes.
+`<capability>` and `<call>` are the two names. The parameter `to` has the meaning it has above. The body is the input: a map with the fields that the `args` of the call describes.
 
-A successful answer has status 200 and a body that is the output: a map, encoded in DRISL, with the fields that the `out` of the call describes.
+A successful answer has status 200 and a body that is the output: a map, encoded in DRISL, with the fields that the `ret` of the call describes.
 
 An answer that reports a failure has another status, and a body that is a map, encoded in DRISL, with these fields:
 
@@ -223,7 +225,7 @@ A call can cost the city money or space. A host should know who is asking before
 
 An authentication statement names the host and not the call (see [Request Authentication](auth.md)). A statement sent with one call can be sent again with another call to the same host for as long as it is accepted.
 
-A name does not say which description a host follows; the CID in `def` does. Software that depends on the exact shape of a call compares that CID with the one it was written for.
+A name does not say which description a host follows; the CID in `spec` does. Software that depends on the exact shape of a call compares that CID with the one it was written for.
 
 A description is data. A host that loads a capability does not run anything that the description contains.
 
@@ -234,6 +236,8 @@ The list of what a host has loaded is public, and shows what a city spends its m
 Field descriptions may take the constraints, references and unions that the definitions of record types will have, once those are specified (see [Paths](path.md)).
 
 A description may become the body of a record, so that it has an author and a path.
+
+An application may later also call a service directly, with credentials that the person has set up, without depending on the city.
 
 Questions still open in this draft:
 
