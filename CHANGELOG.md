@@ -6,6 +6,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 Added:
 
+- [Synchronization](specs/sync.md): software learns of new records from a stream of events, `GET /.well-known/zu-live` with a filter as its parameters, answered as server-sent events. An event carries the CID of a record that reached the host and its `by`, `to` and `type`, and no record. Events are hints: a host may leave some out, and software compares when it opens the stream and after an interruption. The open question on how software learns of new records is dropped.
 - [Records](specs/record.md): records are delivered to a host with `POST /.well-known/zu-recs`. The body of the request has the `recs` and `blocks` of the answer to a query, and the request carries no authentication. The answer states, under `stat`, what the host did with each record: `ok`, `want` when it holds the header and wants the body, or one of the words `bad`, `big`, `full`, `deny` and `busy` when it did not accept it. The open question in [Synchronization](specs/sync.md) on how a record is delivered to a host is dropped.
 
 Changed:
