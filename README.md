@@ -85,6 +85,8 @@ What different applications must agree on to read the same data.
 |---|---|---|
 | path: Type Syntax | How a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md#type-syntax) |
 
+To be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
+
 The other modules of v0.3 have not been designed yet.
 
 ## Layout

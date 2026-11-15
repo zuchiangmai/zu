@@ -4,6 +4,10 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 ## Unreleased
 
+Added:
+
+- The [README](README.md) notes, under App, a mechanism to be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
+
 Changed:
 
 - The modules in the [README](README.md) are grouped in five lanes: Data, Sync, Net, Auth and App. A module is listed under the lane most of it belongs to, and a section of it that belongs to another lane is listed under that lane as well, such as how records are delivered (Sync), the stream of events that tells software of new records (Net), and how a type is written (App). The specifications themselves are unchanged.
