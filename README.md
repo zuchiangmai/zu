@@ -1,6 +1,6 @@
 # Zu
 
-Zu is the protocol behind Pol, written down as specifications that other software can implement without reading the pol code. This is Zu v0.3.8; the earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
+Zu is the protocol behind pol, written down as specifications that other software can implement without reading the pol code. This is Zu v0.3.8; the earlier designs were v0.1 and v0.2. What each version of v0.3 changed is listed in [CHANGELOG.md](CHANGELOG.md).
 
 ```
 What a host answers, under https://<host>/.well-known/
