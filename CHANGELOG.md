@@ -6,6 +6,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 Added:
 
+- [Capabilities](specs/cap.md), a new specification under App: what a host can do for applications besides keeping records. A capability has a name and one or more calls, written together as `stt/start`. Its description is a map that states each call, the shape of its input and of its output as field descriptions, and the words it may fail with; the description is named by its CID. A host lists the capabilities it has loaded at `GET /.well-known/zu-cap`, each with the CID of the description it follows, and software makes a call with `POST /.well-known/zu-cap/<capability>/<call>`. Every call may fail with `bad`, `deny`, `none`, `big`, `full` or `busy`. How a city records which capabilities it loads, and how an application states which ones it needs, are not specified yet.
 - The [README](README.md) notes, under App, a mechanism to be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
 - The [README](README.md) notes, under App, that reproducible builds will be introduced later, by which anyone can check that an application was built from its source.
 

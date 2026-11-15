@@ -6,7 +6,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for, fetched and delivered to a host, how files are given to a host and kept, how two parties find out which records each of them lacks, and how software learns of new records.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for, fetched and delivered to a host, how files are given to a host and kept, how two parties find out which records each of them lacks, and how software learns of new records. It also specifies, as a first draft, how a host describes, lists and answers the capabilities it has loaded for applications.
 
 It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
@@ -84,6 +84,7 @@ What different applications must agree on to read the same data.
 | Module | Covers | Where |
 |---|---|---|
 | path: Type Syntax | How a type is written, a class and a kind, such as `ev/event` | [`specs/path.md`](specs/path.md#type-syntax) |
+| cap | What a host can do for applications besides keeping records: how a capability and its calls are described, how a host lists the capabilities it has loaded, and how software calls one | [`specs/cap.md`](specs/cap.md) (draft) |
 
 To be designed later: every version of an application is scanned automatically, and the page of an application shows a security scorecard.
 
