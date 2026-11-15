@@ -46,7 +46,7 @@ In JSON, a header looks like this:
   "by": "did:zu:ewvi7nxzyoun6zhxrhs64oiz",
   "to": "did:zu:q4cm5j2xk7hvn3oaz6t2wplb",
   "type": "ev/event",
-  "key": "self",
+  "key": "kx7q2m5v4tbn3hpw",
   "at": 1794528000000,
   "prev": [
     { "$link": "bafyrei…" }
@@ -196,7 +196,7 @@ A record is valid wherever it is checked, and anyone who has a record can pass i
 
 Nothing in a record shows that other records exist. A host that holds back a record of an individual cannot be detected from the records it does serve.
 
-The header is not hidden. Whoever holds a header sees the DID, the city the record is meant for, the type, the key, the time and the signing key, and through `prev` which records the signer had seen, even when the body is held back. Keys are chosen by the signer and may themselves carry information.
+The header is not hidden. Whoever holds a header sees the DID, the city the record is meant for, the type, the key, the time and the signing key, and through `prev` which records the signer had seen, even when the body is held back. Keys are chosen by the signer and may themselves carry information; software generates them at random for that reason (see [Paths](path.md)).
 
 Parsing untrusted headers and bodies carries the risks described in the [Data Model](data-model.md).
 
