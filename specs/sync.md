@@ -2,9 +2,9 @@
 
 A specification for how two parties find out which records each of them lacks: which records they compare, in which order, and how they narrow down the differences.
 
-This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how a record is delivered to a host, and how software learns of new records are left to a later design. The questions still open are listed under Possible Future Changes.
+This document is not adapted from an AT Protocol specification. Its form follows Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html), which applies [range-based set reconciliation](https://arxiv.org/abs/2212.13567) to sets that are chosen first. For now, what stands for a record in a comparison, the order of the records, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), protocol version 1. It is a draft: how software learns of new records is left to a later design. The questions still open are listed under Possible Future Changes.
 
-This document covers the set of records two parties compare, what stands for a record, the order of the records in the set, comparing by fingerprints, and the request that carries a comparison. What a record is, and which records a host keeps, is specified in [Records](record.md). How content is fetched once a party knows what it lacks is specified in [Retrieval](retrieval.md), and how files follow records in [Blobs](blob.md). How a record is delivered to a host, and how software learns of new records as they arrive, are not specified yet.
+This document covers the set of records two parties compare, what stands for a record, the order of the records in the set, comparing by fingerprints, and the request that carries a comparison. What a record is, and which records a host keeps, is specified in [Records](record.md). How content is fetched once a party knows what it lacks is specified in [Retrieval](retrieval.md), and how files follow records in [Blobs](blob.md). How records are delivered to a host is specified in [Records](record.md#delivering). How software learns of new records as they arrive is not specified yet.
 
 ## The Set
 
@@ -74,7 +74,7 @@ The answer carries the header `Access-Control-Allow-Origin: *`, so that a page o
 
 Comparing transfers no records. It tells the party that sent the first message which records each of the two lacks; the other party does not learn it from the comparison.
 
-That party fetches the headers and bodies it lacks (see [Retrieval](retrieval.md)) and checks each of them itself (see [Records](record.md)). It delivers the records the other party lacks, and then the files those records refer to (see [Blobs](blob.md)).
+That party fetches the headers and bodies it lacks (see [Retrieval](retrieval.md)) and checks each of them itself (see [Records](record.md)). It delivers the records the other party lacks (see [Records](record.md#delivering)), and then the files those records refer to (see [Blobs](blob.md)).
 
 ## Usage and Implementation Guidelines
 
@@ -105,5 +105,4 @@ Slow or offline links may use a different way of comparing sets.
 Questions still open in this draft:
 
 - Whether a set can also be narrowed by key.
-- How a record is delivered to a host.
 - How software learns of new records as they arrive.

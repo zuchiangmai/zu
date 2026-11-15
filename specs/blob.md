@@ -10,7 +10,7 @@ This document covers uploading a blob, when a host keeps one and when it discard
 
 ## Uploading
 
-Software delivers a record, header and body, to a host first. It then gives the host each blob the record refers to, with an HTTP `PUT` request:
+Software delivers a record, header and body, to a host first (see [Records](record.md#delivering)). It then gives the host each blob the record refers to, with an HTTP `PUT` request:
 
 ```
 PUT https://<host>/.well-known/zu-blob/<cid>

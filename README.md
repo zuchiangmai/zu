@@ -6,7 +6,7 @@ Zu is the protocol behind polis, written down as specifications that other softw
 
 ## Scope
 
-v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for and fetched, how files are given to a host and kept, and how two parties find out which records each of them lacks.
+v0.3 specifies the relationship between one city and the data of its people: their DIDs and handles, the directory, how records are signed, named, addressed, asked for, fetched and delivered to a host, how files are given to a host and kept, and how two parties find out which records each of them lacks.
 
 It also specifies, as a first version, how a person who signed up in one city signs in to another city, or moves to another device, by handing over the Zu signing key (see [DIDs](specs/did.md#signing-in-to-another-city)). How cities relate to signing keys is left to a later design. Future work: introduce a decentralized group key mechanism.
 
@@ -21,7 +21,7 @@ Direction set, not specified yet:
 
 Not specified yet, to be designed within v0.3:
 
-- What surrounds the comparison in synchronization. [Synchronization](specs/sync.md) states the form: two parties first agree on a set of records, order it by time, compare fingerprints of ranges, and split a range whose fingerprints differ by the number of records in it, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567), and Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html)). For now what stands for a record, the order, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), a set is written in a request as the filter of a query, and each message of a comparison is carried by a request to `/.well-known/zu-diff`. How a record is delivered to a host, and how software learns of new records as they arrive, are not designed yet.
+- What surrounds the comparison in synchronization. [Synchronization](specs/sync.md) states the form: two parties first agree on a set of records, order it by time, compare fingerprints of ranges, and split a range whose fingerprints differ by the number of records in it, until the differences are found (see Meyer, [Range-Based Set Reconciliation](https://arxiv.org/abs/2212.13567), and Willow's [region-based set reconciliation](https://willowprotocol.org/specs/rbsr/index.html)). For now what stands for a record, the order, the fingerprint and the messages are those of [Negentropy](https://github.com/hoytech/negentropy/blob/master/docs/negentropy-protocol-v1.md), a set is written in a request as the filter of a query, and each message of a comparison is carried by a request to `/.well-known/zu-diff`. How software learns of new records as they arrive is not designed yet.
 
 Not specified yet, to be designed later:
 
@@ -45,7 +45,7 @@ Not specified yet, to be designed later:
 | cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
 | login | How a person logs in to a page with a Zu signing key that another page holds: how the key is handed to the other page, on the same device and between devices | [`specs/login.md`](specs/login.md) (draft) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |
-| record | The signed record: a signed header and a body linked by CID, the city a record is meant for, links to earlier records, time, and which record a path refers to | [`specs/record.md`](specs/record.md) (draft) |
+| record | The signed record: a signed header and a body linked by CID, the city a record is meant for, links to earlier records, time, which record a path refers to, and how records are delivered to a host | [`specs/record.md`](specs/record.md) (draft) |
 | sync | How two parties find out which records each of them lacks: the set they compare, its order, comparing by fingerprints, and the request that carries a comparison | [`specs/sync.md`](specs/sync.md) (draft) |
 
 The other modules of v0.3 have not been designed yet.

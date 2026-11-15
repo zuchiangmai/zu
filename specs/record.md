@@ -1,6 +1,6 @@
 # Records
 
-A specification for the signed record: its header and body, how it is signed and checked, how records refer to earlier records, and which record a path refers to.
+A specification for the signed record: its header and body, how it is signed and checked, how records refer to earlier records, which record a path refers to, and how records are delivered to a host.
 
 This document is not adapted from an AT Protocol specification. atproto signs a whole repository with one signature, made by the server that hosts it, and proves a single record with a path through a Merkle tree. Zu signs each record by itself, so that a record can be checked wherever it is found and by whoever holds it. The designs this document draws on are named under Relationship to Other Designs. It is a draft; the questions still open are listed under Possible Future Changes.
 
@@ -13,7 +13,7 @@ A record is made of two parts:
 
 The header is what is signed. The body is tied to it by its CID. A record can therefore be checked with its header alone, and stays checkable when its body is fetched later, held back or discarded.
 
-This document covers the header, the body, signing, verification, the city a record is meant for, links to earlier records, time, and which record a path refers to. How software asks a host for records is specified in [Queries](query.md), and how two parties find out which records each of them lacks in [Synchronization](sync.md). How the body of a type is defined, and how records that are not public are handled, are left to later documents.
+This document covers the header, the body, signing, verification, the city a record is meant for, links to earlier records, time, which record a path refers to, and delivering records to a host. How software asks a host for records is specified in [Queries](query.md), and how two parties find out which records each of them lacks in [Synchronization](sync.md). How the body of a type is defined, and how records that are not public are handled, are left to later documents.
 
 ## Header
 
@@ -160,6 +160,48 @@ Among the valid records with a given path:
 - If the record the path refers to has `body` set to `null`, the path refers to no record.
 
 Software that holds the same valid records reaches the same answer. Software that holds different records may reach different answers until it has exchanged them.
+
+## Delivering
+
+Software gives records to a host with an HTTP `POST` request, at the address that answers [queries](query.md):
+
+```
+POST https://<host>/.well-known/zu-recs
+
+<a map, encoded in DRISL>
+```
+
+The body of the request has the fields of the answer to a query:
+
+- `recs` (list, required): the headers of the records delivered, each a map with every field as it was signed.
+- `blocks` (map, optional): bodies of those records, each a map, under the string form of its CID.
+
+The request carries no authentication. A record is signed, so anyone who holds it may deliver it. Which records a host accepts is the host's own matter.
+
+The host checks every header as described under Verifying a Record, and every body against the `body` CID of its header. It keeps the records it accepts. Delivering a record the host already holds succeeds and changes nothing. A host keeps a record whose body it does not hold yet; the body can be delivered afterwards, in the `blocks` of a later request.
+
+A successful answer has status 200 and a body that is a map, encoded in DRISL. The map says nothing about the records the host accepted. It has these fields, both optional:
+
+- `err` (map): the records the host did not accept, each under the string form of its CID, with a word that says why.
+- `want` (list): the CIDs of the bodies that the records it accepted refer to and that it does not hold.
+
+The words in `err`:
+
+| Word | Meaning |
+|---|---|
+| `bad` | the record is not valid |
+| `big` | the header or the body is larger than the host accepts |
+| `full` | the individual's allowance at this host is used up |
+| `deny` | the host does not accept this record |
+| `busy` | the host cannot take the record now; software may deliver it again later |
+
+Software treats a word it does not know as `deny`.
+
+A host answers a request it cannot parse with status 400, and a request larger than it accepts with status 413.
+
+The answer carries the header `Access-Control-Allow-Origin: *`, so that a page of another origin can read it.
+
+After the records, software gives the host the files they refer to (see [Blobs](blob.md)).
 
 ## Relationship to Other Designs
 

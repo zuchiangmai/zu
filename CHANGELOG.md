@@ -4,6 +4,10 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 ## Unreleased
 
+Added:
+
+- [Records](specs/record.md): records are delivered to a host with `POST /.well-known/zu-recs`. The body of the request has the `recs` and `blocks` of the answer to a query, and the request carries no authentication. The answer says nothing about the records the host accepted: it lists the records it did not accept under `err`, each with one of the words `bad`, `big`, `full`, `deny` and `busy`, and the bodies it still lacks under `want`. The open question in [Synchronization](specs/sync.md) on how a record is delivered to a host is dropped.
+
 Changed:
 
 - Key Handover is renamed [Login](specs/login.md), and its names are shortened in the manner of Unix names. The receiving page finds the login page at `/.well-known/zu-login`; it was `/.well-known/zu-handover`. The three messages state the `$type` values `login`, `key` and `sealed`; they were `handover-request`, `handover` and `handover-sealed`. The string a login page sends when it is ready is `zu-login-ready`, and the HKDF info string is `zu-login-1`. The module is listed as `login` in the [README](README.md). The steps of the exchange are unchanged.

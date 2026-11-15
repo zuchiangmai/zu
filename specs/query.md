@@ -8,7 +8,7 @@ A [record](record.md) is found by its [path](path.md) when the path is known. Of
 
 A query filters only on what the record header states: whose record it is, the city it is meant for, its type, its key and its time. The header is readable by anyone who holds it, so a host can answer without knowing any type. Questions about what a body says, such as which notes contain a word or which events start this week, are not asked of a host: software fetches the records concerned and answers them itself. An application is a view over records, and it computes its view where the records are.
 
-This document covers the query, its parameters, the answer, and what a host must do to answer. How two parties bring their records into agreement is specified in [Synchronization](sync.md). How records reach a host is not specified yet. How records that are not public are asked for is not specified yet.
+This document covers the query, its parameters, the answer, and what a host must do to answer. How two parties bring their records into agreement is specified in [Synchronization](sync.md). How records are delivered to a host is specified in [Records](record.md#delivering). How records that are not public are asked for is not specified yet.
 
 ## The Query
 
