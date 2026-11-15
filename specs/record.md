@@ -180,15 +180,16 @@ The request carries no authentication. A record is signed, so anyone who holds i
 
 The host checks every header as described under Verifying a Record, and every body against the `body` CID of its header. It keeps the records it accepts. Delivering a record the host already holds succeeds and changes nothing. A host keeps a record whose body it does not hold yet; the body can be delivered afterwards, in the `blocks` of a later request.
 
-A successful answer has status 200 and a body that is a map, encoded in DRISL. The map says nothing about the records the host accepted. It has these fields, both optional:
+A successful answer has status 200 and a body that is a map, encoded in DRISL, with one field:
 
-- `err` (map): the records the host did not accept, each under the string form of its CID, with a word that says why.
-- `want` (list): the CIDs of the bodies that the records it accepted refer to and that it does not hold.
+- `stat` (map, required): for every record in the request, under the string form of its CID, a word that says what the host did with it.
 
-The words in `err`:
+The words:
 
 | Word | Meaning |
 |---|---|
+| `ok` | the host holds the record, and needs nothing more for it |
+| `want` | the host holds the header, and wants the body |
 | `bad` | the record is not valid |
 | `big` | the header or the body is larger than the host accepts |
 | `full` | the individual's allowance at this host is used up |

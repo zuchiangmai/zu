@@ -6,7 +6,7 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 Added:
 
-- [Records](specs/record.md): records are delivered to a host with `POST /.well-known/zu-recs`. The body of the request has the `recs` and `blocks` of the answer to a query, and the request carries no authentication. The answer says nothing about the records the host accepted: it lists the records it did not accept under `err`, each with one of the words `bad`, `big`, `full`, `deny` and `busy`, and the bodies it still lacks under `want`. The open question in [Synchronization](specs/sync.md) on how a record is delivered to a host is dropped.
+- [Records](specs/record.md): records are delivered to a host with `POST /.well-known/zu-recs`. The body of the request has the `recs` and `blocks` of the answer to a query, and the request carries no authentication. The answer states, under `stat`, what the host did with each record: `ok`, `want` when it holds the header and wants the body, or one of the words `bad`, `big`, `full`, `deny` and `busy` when it did not accept it. The open question in [Synchronization](specs/sync.md) on how a record is delivered to a host is dropped.
 
 Changed:
 
