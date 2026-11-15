@@ -161,21 +161,21 @@ A person's private Zu signing keys are held in the web origins that use them, su
 
 A person signs in to city A by handing the Zu signing key held in city B's web origin over to city A's page. Afterwards both origins hold the same key, and city A's page signs with it by itself. No key is added to the DID for city A. Where city A's host needs to know which DID a request comes from, city A's page proves it as described in [Request Authentication](auth.md).
 
-The same handover brings the key to another device: to the same city on another device, or to another city on another device.
+The same login brings the key to another device: to the same city on another device, or to another city on another device.
 
 Signing in this way does not change the DID document, and needs no rotation key. A person who is already signed in somewhere keeps the handles they already have, and uses them in city A as well.
 
-A handover follows these rules:
+A login follows these rules:
 
 - A key is handed over only after the person has chosen to do so in the page that holds it. Being opened by another page, by a link or by a scanned code must never by itself hand over a key.
 - Before it hands the key over, the page that holds it shows who receives it: the address of the receiving site and the name of its city.
 - The receiving page checks, before it uses the key, that its public key is one of the Zu signing keys in the person's DID document. A key that does not match is discarded.
-- On the same device, the receiving page opens the page that holds the key in a window of its own, and the two pages exchange the request and the key directly. Between devices, the receiving page shows a code carrying a public key made for this one handover; the key is sent encrypted to that public key, and a host that relays it sees only ciphertext.
+- On the same device, the receiving page opens the page that holds the key in a window of its own, and the two pages exchange the request and the key directly. Between devices, the receiving page shows a code carrying a public key made for this one login; the key is sent encrypted to that public key, and a host that relays it sees only ciphertext.
 - Only Zu signing keys are handed over. A rotation key is never handed to another origin.
 
 So that a key can be sent to another device, the page that holds a Zu signing key stores it in a form it can export.
 
-The messages and steps of a handover are specified in [Key Handover](handover.md).
+The messages and steps of a login are specified in [Login](login.md).
 
 How cities relate to signing keys, for example whether each city has a key of its own, is left to a later design. Future work: introduce a decentralized group key mechanism. What is not specified yet is listed under Possible Future Changes.
 

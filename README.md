@@ -43,7 +43,7 @@ Not specified yet, to be designed later:
 | query | Asking a host for records: one record, an individual's records of a type, or a type across everyone the host holds records for | [`specs/query.md`](specs/query.md) (draft) |
 | blob | Files: how a file is given to a host, how long the host keeps it, and whom it counts against | [`specs/blob.md`](specs/blob.md) (draft) |
 | cryptography | Zu signing keys: Ed25519, how data is signed, and the strict rules by which signatures are verified | [`specs/cryptography.md`](specs/cryptography.md) (draft) |
-| handover | How a Zu signing key is handed from the page that holds it to another page, on the same device and between devices | [`specs/handover.md`](specs/handover.md) (draft) |
+| login | How a person logs in to a page with a Zu signing key that another page holds: how the key is handed to the other page, on the same device and between devices | [`specs/login.md`](specs/login.md) (draft) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) (draft) |
 | record | The signed record: a signed header and a body linked by CID, the city a record is meant for, links to earlier records, time, and which record a path refers to | [`specs/record.md`](specs/record.md) (draft) |
 | sync | How two parties find out which records each of them lacks: the set they compare, its order, and comparing by fingerprints | [`specs/sync.md`](specs/sync.md) (draft) |
