@@ -39,7 +39,7 @@ A person is a resident of a city once both of these are on the city's chain:
 - a **join**: a record of the person, written to the city, that says the person joins;
 - an **admission**: either a record of the same content, signed by a coordinator in office or by the city itself, that lists the join in `prev`; or an invitation that the join lists in `prev` and carries the secret of (see Invitations).
 
-The person is a resident from the later of the two. A resident leaves with a record of their own that says they leave. Leaving takes effect at once and ends every role the person holds, except that the last coordinator in office cannot leave (see Rules).
+The person is a resident from the later of the two. A resident leaves with a record of their own that says they leave. Leaving takes effect at once and ends every role the person holds.
 
 ## Invitations
 
@@ -61,7 +61,7 @@ There are three roles:
 | `curator` | the city, or any one coordinator | what the city's applications give curators, such as reviewing events |
 | `inviter` | the city, or any one coordinator | opening invitations and withdrawing them |
 
-Only a resident can hold a role. Nobody appoints themselves. Anyone may give up a role they hold, except the last coordinator in office.
+Only a resident can hold a role. Anyone may give up a role they hold.
 
 The operator is not a role. The operator acts by signing with the city's keys, and such records have the city's DID as `by`.
 
@@ -82,23 +82,16 @@ Software ignores a `city/role` record with a `kind` it does not know.
 
 ## Rules
 
-The records on a city's chain take effect one after another, in the order of the chain (see The Chain). Each record is judged by the state that the records before it have produced: who is a resident, who holds which role, and which proposals are open. A record to which no rule below gives effect stays on the chain and has no effect.
+Six rules give the records on a city's chain their effect:
 
-**Records of the city.** A record whose `by` is the city's DID takes effect at once. It may admit a resident, appoint anyone who is a resident to a role, and dismiss anyone from a role.
+1. **Order.** Records take effect one after another, in the order of the chain (see The Chain). Each is judged by the state that the records before it have produced: who is a resident, who holds which role, and which proposals are open. A record that no rule gives effect to has no effect, and stays on the chain.
+2. **The city.** A record whose `by` is the city's DID takes effect at once. It may admit anyone as a resident, appoint any resident to a role, and dismiss anyone from a role.
+3. **Residents.** A person becomes a resident with a join and an admission, and leaves with a record of their own (see Residents). Only a resident holds a role, and leaving ends every role the person holds.
+4. **Curators and inviters.** A record by a coordinator in office appoints a resident to the role, or dismisses someone from it, at once.
+5. **Coordinators.** A record by a coordinator in office about another person's coordinator role is a vote. The first vote about a person and a direction (`who`, with `ok` `true` or `false`) opens a **proposal**; later votes by other coordinators with the same `who`, `kind` and `ok` count for it. The number of coordinators, `n`, is the number in office just before the proposal on the chain, and the proposal passes with `n / 2 + 1` votes, the division rounded down: 1 of 1, 2 of 2, 2 of 3, 3 of 4, 3 of 5. It takes effect with the vote that reaches that number. It closes when 14 days have passed since its `at`, and a vote with a later `at` does not count.
+6. **Giving up.** Anyone may give up a role they hold, with a record of their own that has their DID in `who` and `ok` `false`. It takes effect at once.
 
-**Residents.** A join takes effect as described under Residents. A record with `kind` `resident`, `ok` `false` and the signer's own DID in `who` makes the signer leave.
-
-**Curators and inviters.** A record by a coordinator in office that appoints a resident other than the signer, or dismisses someone from the role, takes effect at once. A record in which the holder gives up their own role takes effect at once.
-
-**Coordinators.** A coordinator may give up the role by a record of their own, which takes effect at once unless they are the last coordinator in office. Any other record by a coordinator in office about a coordinator is a vote:
-
-- The first such record about a person and a direction (`who`, with `ok` `true` or `false`) opens a **proposal**, and counts as its signer's vote.
-- A later record by another coordinator in office with the same `who`, `kind` and `ok`, while the proposal is open, is a vote for it.
-- The number of coordinators, `n`, is the number in office just before the proposal on the chain. The proposal passes with `n / 2 + 1` votes, the division rounded down: 1 of 1, 2 of 2, 2 of 3, 3 of 4, 3 of 5.
-- It takes effect with the vote that reaches that number.
-- A vote counts if its signer is in office at the vote's place on the chain. A vote cast before the signer left office keeps counting.
-- A proposal closes when 14 days have passed since its `at`. A vote whose `at` is later than that does not count.
-- A proposal that would dismiss the last coordinator in office has no effect.
+Cases these rules leave odd are not errors, as long as everyone works out the same state. A city whose last coordinator leaves has none until the city appoints one.
 
 ## The Chain
 
@@ -115,7 +108,7 @@ Software that signs a governance record:
 
 1. fetches the city's latest governance record, with the query `to=<city>&type=city/role&n=1` (see [Queries](query.md)), and lists it in `prev`, along with the records the new one acts on, such as the proposal it votes for or the join it admits;
 2. sets `at` to the later of its own clock and the host's, as read from the `Date` header of the host's latest answer;
-3. when the host answers `stale`, fetches the latest record again and checks whether the record still has effect: the signer still holds what the record needs, the person concerned is still a resident, the proposal is still open, and the signer is not the last coordinator. If so, it signs the same body again and delivers it. If not, it tells the person why the record was not delivered.
+3. when the host answers `stale`, fetches the latest record again and checks whether the record still has effect: the signer still holds what the record needs, the person concerned is still a resident, and the proposal is still open. If so, it signs the same body again and delivers it. If not, it tells the person why the record was not delivered.
 
 A record signed while offline waits on the device until it can be delivered, and then goes through the same steps.
 
@@ -132,8 +125,6 @@ Applications that depend on a role, such as a review that only a curator may mak
 The time a proposal stays open, 14 days, and the window of 60 seconds are counted with the `at` of records. The host's clock check keeps those times close to the moment the records reach the host.
 
 Software should show records that are waiting to be delivered, and say why a record was not delivered.
-
-A host may refuse a governance record to which no rule gives effect, with the word `deny`.
 
 Test vectors for this specification will be published in [`vectors/`](../vectors/).
 
