@@ -10,15 +10,16 @@ This document covers the statement, how it is sent with an HTTP request, and how
 
 ## Statement
 
-A statement is a map in the [Data Model](data-model.md) with these fields, all of them required:
+A statement is a map in the [Data Model](data-model.md) with these fields. All of them are required, except `cap`:
 
 - `$type` (string): the fixed value `auth`.
 - `v` (integer): the fixed value `1`.
-- `by` (string): the DID the software acts for (see [DIDs](did.md)).
+- `by` (string): the DID the software acts for (see [DIDs](did.md)). It is a `did:key` only when the statement names a pass in `cap`.
 - `aud` (string): the host the statement is for, as the origin of the URL the request is sent to: scheme, hostname, and the port when it is not the default one. For example `https://pol.4seas.example`.
 - `at` (integer): when the statement was signed, in milliseconds since 1970-01-01T00:00:00Z, by the clock of the signing software.
 - `nonce` (bytes): at least 16 random bytes, made anew for each statement.
 - `pub` (string): the public key of the Zu signing key that signed the statement, in multikey encoding (see [Cryptography](cryptography.md)).
+- `cap` (link, optional): the CID of a pass that lets `by` act for the person who gave it (see [Capabilities](cap.md)).
 - `sig` (bytes): the signature.
 
 The statement is signed as described in [Cryptography](cryptography.md): the map without `sig` is encoded in DRISL, and the bytes are signed with the Zu signing key whose public key is `pub`.
@@ -59,13 +60,14 @@ A host accepts a statement only if all of the following hold:
 - `at` is within 5 minutes of the host's own clock, before or after
 - the host has not seen the same `nonce` with the same `by` before
 - the signature in `sig` is valid for the statement without `sig`, under the public key in `pub`, by the rules in [Cryptography](cryptography.md)
-- `pub` is a Zu signing key in the current DID document of `by`
+- `pub` is a Zu signing key in the current DID document of `by`; when `by` is a `did:key`, `pub` is the key that the `did:key` names
+- `by` is a `did:key` only if `cap` is present
 
 A host remembers the nonces it has accepted for at least 10 minutes, the whole span in which a statement's `at` can be accepted.
 
 Unlike a record, a statement is checked only against the keys in the current DID document. A key that has been removed from the document no longer authenticates.
 
-When the statement is missing, or does not pass, the host answers with HTTP status 401.
+When the statement is missing, or does not pass, the host answers with HTTP status 401. When the statement passes and names a pass, the host then checks the pass as described in [Capabilities](cap.md#using-a-pass).
 
 ## Usage and Implementation Guidelines
 

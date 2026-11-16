@@ -21,6 +21,8 @@ It is possible that other methods will be accepted in the future, but the intent
 
 `did:webvh` is not accepted. A `did:web` document that a `did:webvh` DID publishes in parallel is accepted as `did:web`, under its `did:web` identifier.
 
+`did:key` is accepted for one use only: as the holder of a pass, which may sign authentication statements made under that pass (see [Capabilities](cap.md) and [Request Authentication](auth.md)). Only `did:key` identifiers of Ed25519 keys are accepted. A `did:key` is never the `by` of a record, and never claims handles. Its DID document is the key itself.
+
 ### `did:zu` in Zu
 
 The following limits of `did:plc` apply to `did:zu` unchanged, and are enforced by the directory:
@@ -113,7 +115,9 @@ A DID may have several Zu signing keys, for example one for each device and web 
 
 At least one valid Zu signing key is required for most Zu functionality. A DID with no valid key in its document is likely broken.
 
-A person's DID document carries no `service` entry for where the person's data is. Software looks for it at the domains of the handles the DID claims (see [Map](map.md) and [Paths](path.md)). How the DID document of a city is marked is specified in a separate document.
+A person's DID document carries no `service` entry for where the person's data is. Software looks for it at the domains of the handles the DID claims (see [Map](map.md) and [Paths](path.md)).
+
+The DID documents of cities and hosts carry a `service` entry with the id `#pol`, whose type is `city` or `host`. It tells software that the DID is a city or a host, and where it answers. See [Cities](city.md#marking-a-city-and-a-host).
 
 A host is identified by a `did:zu` of its own, which stays the same when the host changes its domain names. The host claims its domain names as handles in `alsoKnownAs`, the same way a person claims handles, and they are confirmed in the same way (see [Map](map.md)). For example, a host may claim `zu://pol.4seas.example`.
 
@@ -221,9 +225,7 @@ A city's keys are held by its host for now. Control of a city's keys by several 
 
 Questions still open in this draft:
 
-- Which `service` entries hosts' DID documents carry, and whether people's carry any. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
-- How a city's DID document is marked, to be specified in a separate document.
-- How a host's DID document is marked.
+- Which `service` entries hosts' DID documents carry besides `#pol`. One entry left room for is the [iroh](https://www.iroh.computer) relay a host runs for peer-to-peer connections, which Zu does not specify yet (see the [README](../README.md)).
 - How a Zu signing key relates to the handles the DID claims, for example whether a city accepts only some of a DID's signing keys for the handle it confirms.
 - How far the limit of 10 `verificationMethods` entries is raised for `did:zu`, and whether the limit on the size of each operation is raised with it.
 - How a rotation key is used after it has been saved, for example to replace a Zu signing key that was lost, and whether any origin keeps it.

@@ -33,6 +33,8 @@ What a host answers, under https://<host>/.well-known/
 
 **A host serves applications.** Besides keeping records, a host can do work for applications, such as turning speech into text. It describes each service and its calls, and lists the ones it has loaded ([Services](specs/svc.md)).
 
+**A city is run in signed records.** The DID documents of cities and hosts carry a `#pol` entry. People join a city as residents, and coordinators, curators and inviters run it. Joins, appointments and votes are records that the city's host orders in one chain, so that everyone works out the same state ([Cities](specs/city.md)). A person can let another key, such as an assistant's, call services on their behalf with a pass ([Capabilities](specs/cap.md)).
+
 ## Modules
 
 The modules are grouped in five lanes: Data, Sync, Net, Auth and App. A module is listed under the lane most of it belongs to; a section of it that belongs to another lane is listed under that lane as well. The lanes run side by side, not one on top of another. Every specification is a draft; the questions still open are listed at its end, under Possible Future Changes.
@@ -80,6 +82,8 @@ What needs someone to decide: who is who, which name is whose, which software ac
 | map | Handles such as `alice.4seas.example`: how a DID claims them, how a domain confirms them, and how software resolves them | [`specs/map.md`](specs/map.md) |
 | login | How a person logs in to a page with a Zu signing key that another page holds: how the key is handed to the other page, on the same device and between devices | [`specs/login.md`](specs/login.md) |
 | auth | How software proves to a host which DID it acts for: a short-lived signed statement bound to that host | [`specs/auth.md`](specs/auth.md) |
+| city | A city: how its DID document and its host's are marked, residents and invitations, the roles of coordinator, curator and inviter, appointments and votes, and the chain in which the host orders them | [`specs/city.md`](specs/city.md) |
+| cap | Passes: how a person lets another key, such as an assistant's, call services in a city on the person's behalf, and how a host checks the pass | [`specs/cap.md`](specs/cap.md) |
 | blob: Limits | The limits a host may set, and whom a file counts against | [`specs/blob.md`](specs/blob.md#limits) |
 
 The `did:zu` method specification in this repository is the authoritative copy. Its reference implementation is [4seas-community/did-method-zu](https://github.com/4seas-community/did-method-zu), and its directory runs at `https://plc.zuzalu.ink`.
@@ -105,7 +109,7 @@ The other modules of v0.3 have not been designed yet.
 
 **Direction set, not specified yet:**
 
-- Permissions are capabilities. A capability is a signed pass that states what its holder may do; the holder can hand it on, only with less. A host checks the pass rather than a list of who may do what, as in [Meadowcap](https://willowprotocol.org/specs/meadowcap/), [UCAN](https://github.com/ucan-wg/spec) and [Keyhive](https://github.com/inkandswitch/keyhive). In Zu the word capability is kept for this.
+- Permissions are capabilities. A capability is a signed pass that states what its holder may do; the holder can hand it on, only with less. A host checks the pass rather than a list of who may do what, as in [Meadowcap](https://willowprotocol.org/specs/meadowcap/), [UCAN](https://github.com/ucan-wg/spec) and [Keyhive](https://github.com/inkandswitch/keyhive). In Zu the word capability is kept for this. [Capabilities](specs/cap.md) specifies the first use: a person lets a key call services in a city. Passes for reading and writing records, and passes handed on, are not specified yet.
 - Everything is a plugin. The data is an event log, so an application is in fact derived data, one view among others. Different applications can then be created freely, while the data is more durable (see [Paths](specs/path.md#possible-future-changes)).
 - For the purpose of coordination, the many kinds of data that have weak or coordination properties should be organized as causal logs. [Records](specs/record.md) lets a record list the earlier records it follows; which data is organized this way is not specified yet.
 

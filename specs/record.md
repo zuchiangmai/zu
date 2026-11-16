@@ -108,7 +108,7 @@ A record may state the city it is meant for, in `to`. A city is an individual wi
 
 `to` does not change whom a record belongs to. The record belongs to `by`, and stays a valid record of that individual when the city no longer exists.
 
-A host that keeps records for a city tells from `to` which records are meant for that city. Software acting for a city does not treat a record that names another city as meant for it. Which records a host accepts is the host's own matter.
+A host that keeps records for a city tells from `to` which records are meant for that city. Software acting for a city does not treat a record that names another city as meant for it. Which records a host accepts is the host's own matter, except for a city's governance records, which the host accepts as [Cities](city.md#the-chain) says.
 
 ## Earlier Records
 
@@ -195,6 +195,7 @@ The words:
 | `full` | the individual's allowance at this host is used up |
 | `deny` | the host does not accept this record |
 | `busy` | the host cannot take the record now; software may deliver it again later |
+| `stale` | the record is a governance record of a city that does not follow the city's latest one, or whose `at` is too far from the host's clock; software fetches the latest and signs again (see [Cities](city.md#the-chain)) |
 
 Software treats a word it does not know as `deny`.
 
@@ -233,7 +234,7 @@ Whoever holds a Zu signing key of a DID can sign records for it, at any path. A 
 
 `at` is reported by the signer and may be false. A signer can state a time up to 5 minutes ahead and so win over concurrent records for that long. It can also state a time in the past.
 
-Someone who has obtained a key that was since removed from the DID document can still sign records with an `at` before the removal. Such records cannot follow any record made after the removal, because their `at` would not be greater, so they cannot replace it; at a path that was written after the removal they are concurrent records with a lower `at`, and the path does not refer to them. At a path that was not written since, they are accepted. This specification does not prevent that.
+Someone who has obtained a key that was since removed from the DID document can still sign records with an `at` before the removal. Such records cannot follow any record made after the removal, because their `at` would not be greater, so they cannot replace it; at a path that was written after the removal they are concurrent records with a lower `at`, and the path does not refer to them. At a path that was not written since, they are accepted. This specification does not prevent that. For the governance records of a city, the host's clock check prevents it (see [Cities](city.md#the-chain)).
 
 A record is valid wherever it is checked, and anyone who has a record can pass it on. A record that names a city in `to` is meant for that city only. A record without `to` counts in every city.
 

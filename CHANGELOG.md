@@ -6,12 +6,18 @@ What each version of Zu v0.3 changed from the version before. Each version is ma
 
 Changed:
 
+- [Request Authentication](specs/auth.md): a statement may name a pass in `cap`, and its `by` is then the holder's `did:key`.
+- [DIDs](specs/did.md): `did:key` is accepted for one use, as the holder of a pass. The DID documents of cities and hosts carry a `service` entry `#pol` of type `city` or `host`; the open questions on how they are marked are answered.
+- [Records](specs/record.md): a host answers a governance record of a city that does not follow the latest one, or whose time is off, with the new word `stale`.
+- [Services](specs/svc.md): a statement is used for one call, as [Request Authentication](specs/auth.md) already said; the sentence that let it be sent again with another call is removed. A call may be made under a pass.
 - Capabilities is renamed [Services](specs/svc.md), so that the word capability is kept for a signed pass that states what its holder may do (see the [README](README.md)). The module is listed as `svc`. A host lists the services it has loaded at `GET /.well-known/zu-svc`, which was `zu-cap`, under `svcs`, which was `caps`, and software makes a call with `POST /.well-known/zu-svc/<service>/<call>`. A description states the `$type` value `svc`, which was `cap`.
 - [Services](specs/svc.md): names in a description are not keywords of common programming languages. The input of a call is described under `args`, which was `in`, and its output under `ret`, which was `out`. In the list of what a host has loaded, the CID of a description is under `spec`, which was `def`.
 
 Added:
 
-- [Services](specs/svc.md) lists, under Possible Future Changes, that an application may later also call a provider directly with credentials that the person has set up, without depending on the city, and that who may call a service may later be stated by a capability.
+- [Cities](specs/city.md), a new specification under Auth: how cities and hosts are marked, residents and invitations, the roles of coordinator, curator and inviter, appointments and votes by majority, and the chain in which a city's host orders these records. A host accepts a governance record only when it follows the latest one and its time is within 60 seconds of the host's clock.
+- [Capabilities](specs/cap.md), a new specification under Auth: a pass is a record of type `cap/grant` in which a person lets a key make some calls to services in a city; the giver revokes it by removing it.
+- [Services](specs/svc.md) lists, under Possible Future Changes, that an application may later also call a provider directly with credentials that the person has set up, without depending on the city.
 - The [README](README.md) states a direction, not specified yet: permissions are capabilities, signed passes that their holders can hand on only with less, as in Meadowcap, UCAN and Keyhive.
 
 ## v0.3.8 (2026-11-15)

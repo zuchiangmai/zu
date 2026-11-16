@@ -148,7 +148,7 @@ A successful answer has status 200 and a body that is a map, encoded in DRISL, w
 - `svcs` (map, required): the services the asker may call, each under its name. An entry is a map with one field, `spec` (link, required): the CID of the description the host follows for that service.
 - `blocks` (map, optional): descriptions the host chose to send along, each a map, under the string form of its CID.
 
-The list is the asker's. A request may carry an authentication statement (see [Request Authentication](auth.md)), and the host then lists what that DID may call. Without a statement, the host lists what anyone may call.
+The list is the asker's. A request may carry an authentication statement (see [Request Authentication](auth.md)), and the host then lists what that DID may call. When the statement names a pass, the host lists the calls the pass allows and its giver may make (see [Capabilities](cap.md)). Without a statement, the host lists what anyone may call.
 
 Software that does not hold a description fetches it by its CID (see [Retrieval](retrieval.md)) and checks it against that CID. A service that is not in `svcs` is not loaded for the asker, and software does not call it.
 
@@ -215,6 +215,8 @@ A call carries no file. Software gives the file to the host as a blob (see [Blob
 
 An application should work without a service its city has not loaded, or say plainly which service is missing.
 
+A call may be made by a key that holds a pass from a person, such as an assistant's key. Its statement then names the pass, and the host checks the pass before it makes the call (see [Capabilities](cap.md)).
+
 A host that passes a call on to a provider elsewhere answers as if it did the work itself: it checks who is asking and what the city allows before it passes the call on, and software does not learn where the work was done.
 
 Test vectors for this specification will be published in [`vectors/`](../vectors/).
@@ -225,7 +227,7 @@ Whoever does the work of a service sees the input. When a host passes a call on 
 
 A call can cost the city money or space. A host should know who is asking before it makes such a call, and should limit how much each asker may use.
 
-An authentication statement names the host and not the call (see [Request Authentication](auth.md)). A statement sent with one call can be sent again with another call to the same host for as long as it is accepted.
+An authentication statement names the host and not the call (see [Request Authentication](auth.md)). A statement is used for one call; software signs a new one for the next call.
 
 A name does not say which description a host follows; the CID in `spec` does. Software that depends on the exact shape of a call compares that CID with the one it was written for.
 
@@ -240,8 +242,6 @@ Field descriptions may take the constraints, references and unions that the defi
 A description may become the body of a record, so that it has an author and a path.
 
 An application may later also call a provider directly, with credentials that the person has set up, without depending on the city.
-
-Who may call a service may later be stated by a capability that the asker holds, instead of by a list that the host keeps.
 
 Questions still open in this draft:
 
