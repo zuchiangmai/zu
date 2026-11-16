@@ -6,7 +6,7 @@ This document is adapted, with changes, from the [AT Protocol Lexicon specificat
 
 Every host keeps records and files and answers for them (see [Records](record.md), [Queries](query.md), [Synchronization](sync.md) and [Blobs](blob.md)). Some applications need more from the host of a city: a recording turned into text, a question put to a language model, a picture drawn. Work of this kind is a **service**. A host does not have every service. It **loads** the ones its city has a use for. An application, written by anyone, asks for a service by its name, and works in every city whose host has loaded it.
 
-This document covers the names of services and calls, the description of a service, the list of what a host has loaded, and the request that makes a call. Who does the work of a service, the host itself or a provider elsewhere, is the host's own matter. How a city records which services it loads, and how an application states which ones it needs, are not specified yet.
+This document covers the names of services and calls, the description of a service, the list of what a host has loaded, and the request that makes a call. Who does the work of a service, the host itself or a provider elsewhere, is the host's own matter. Which services a city loads is kept in its host's own configuration; this document specifies only the list the host gives of them, and how an application states the services it needs.
 
 ## Services and Calls
 
@@ -129,6 +129,8 @@ A field whose name is not in `fields` is not described. A host ignores such a fi
 
 ## What a Host Has Loaded
 
+Which services a city loads, and which provider does the work of each, the operator sets in the host's own configuration (see [Cities](city.md)). This document does not specify its form: a host answers for it only with the list below. In the same way, the plugins of DeepSeek Harness are rows of a configuration file, and which of them a deployment runs is a choice made when it is put together.
+
 Software asks a host which services it has loaded with an HTTP `GET` request:
 
 ```
@@ -153,6 +155,15 @@ The list is the asker's. A request may carry an authentication statement (see [R
 Software that does not hold a description fetches it by its CID (see [Retrieval](retrieval.md)) and checks it against that CID. A service that is not in `svcs` is not loaded for the asker, and software does not call it.
 
 The answer carries the header `Access-Control-Allow-Origin: *`, so that a page of another origin can read it.
+
+## What an Application Needs
+
+An application states the services it needs as a list of their names, in its own manifest. How manifests of applications are written is not specified in Zu. The list names services, not hosts or providers.
+
+- Every service in the list is required. Software that would run the application in a city whose host has not loaded one of them does not start it, and says which service is missing.
+- A service the application can do without is not listed. The application looks for it in the list of what the host has loaded when it needs it, and leaves out what depends on it when it is not there.
+
+This follows the plugins of Cordis, which list the services they need in `inject`, all of them required, and look for the ones they can do without when they use them.
 
 ## A Call
 
@@ -213,8 +224,6 @@ A call answers when its work is done. A service whose work takes long has one ca
 
 A call carries no file. Software gives the file to the host as a blob (see [Blobs](blob.md)) and puts its CID in the input.
 
-An application should work without a service its city has not loaded, or say plainly which service is missing.
-
 A call may be made by a key that holds a pass from a person, such as an assistant's key. Its statement then names the pass, and the host checks the pass before it makes the call (see [Capabilities](cap.md)).
 
 A host that passes a call on to a provider elsewhere answers as if it did the work itself: it checks who is asking and what the city allows before it passes the call on, and software does not learn where the work was done.
@@ -245,8 +254,6 @@ An application may later also call a provider directly, with credentials that th
 
 Questions still open in this draft:
 
-- How a city records which services it loads, and which provider does the work of each.
-- How an application states the services it needs.
 - How the names of services are kept apart when the same name is chosen twice.
 - Whether a description states the limits a host may set, such as how long a recording may be, and how a host lists the values it has set.
 - Whether calls that change nothing are told apart from the others, so that their answers can be cached.
